@@ -53,8 +53,9 @@ function Login() {
     	<form className='flex flex-col' onSubmit={handleSubmit}>
 				<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="username" placeholder='Username'className='border-2 border-black rounded mb-2 p-1'/>
 				<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder='Password'className='border-2 border-black rounded mb-2 p-1'/>
-				<input type="submit" value="Submit" className='bg-slate-500 hover:bg-slate-700 text-white py-2 px-4 rounded'/>
+				<input type="submit" value="Login" className='bg-slate-500 hover:bg-slate-700 cursor-pointer text-white py-2 px-4 rounded mb-2'/>
 			</form>
+			<p className='text-white text-xs'>Don't have an account? <a href='/register' className='text-blue-400'>Register here</a></p>
 		</div>
   );
 }

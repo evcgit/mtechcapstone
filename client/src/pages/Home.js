@@ -30,7 +30,7 @@ const Home = () => {
   }, [navigate]);
 
   return (
-    <div>
+    <div className='bg-gray-600 h-screen'>
       <h1>Welcome to the Home Page</h1>
     </div>
   );
