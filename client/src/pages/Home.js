@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
+import Header from '../components/Header';
 
 const Home = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-
     if (!token) {
       alert('You must be logged in to view this page');
       navigate('/');
@@ -15,7 +15,6 @@ const Home = () => {
       try {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
-
         if (decodedToken.exp < currentTime) {
           alert('Session expired. Please log in again.');
           localStorage.removeItem('token');
@@ -30,9 +29,7 @@ const Home = () => {
   }, [navigate]);
 
   return (
-    <div className='bg-gray-600 h-screen'>
-      <h1>Welcome to the Home Page</h1>
-    </div>
+		<Header />
   );
 };
 

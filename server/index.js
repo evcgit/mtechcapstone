@@ -13,7 +13,6 @@ const usersData = fs.readFileSync('./data/users.json');
 const users = JSON.parse(usersData).users;
 
 app.use(express.json());
-app.use(express.static('public', { index: false }));
 
 app.get('/api', (req, res) => {
 	res.json({ message: 'Backend Online!' });
@@ -34,7 +33,7 @@ app.post('/login', async (req, res) => {
     return res.status(401).json({ errorMessage: 'Invalid username or password' });
   };
 
-  const token = jwt.sign({ sub: user.id, username: user.username }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1m' });
+  const token = jwt.sign({ sub: user.id, username: user.username }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
   console.log('login successful, token generated');
   return res.json({ token: token });
 });
