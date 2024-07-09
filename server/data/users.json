@@ -6,6 +6,13 @@
       "password": "$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW",
 			"firstName": "Evan",
 			"lastName": "Cortez"
+    },
+    {
+      "id": 2,
+      "username": "kobe",
+      "password": "$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW",
+      "firstName": "Kobe",
+      "lastName": "Anderson"
     }
   ]
 }
