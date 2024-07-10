@@ -5,14 +5,24 @@
       "username": "evan",
       "password": "$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW",
 			"firstName": "Evan",
-			"lastName": "Cortez"
+			"lastName": "Cortez",
+			"admin": true
     },
     {
       "id": 2,
       "username": "kobe",
       "password": "$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW",
       "firstName": "Kobe",
-      "lastName": "Anderson"
-    }
+      "lastName": "Anderson",
+			"admin": true
+    },
+		{
+			"id": 3,
+			"username": "user",
+			"password": "$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW",
+			"firstName": "James",
+			"lastName": "Smith",
+			"admin": false
+		}
   ]
 }

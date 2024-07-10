@@ -33,7 +33,7 @@ app.post('/login', async (req, res) => {
     return res.status(401).json({ errorMessage: 'Invalid username or password' });
   };
 
-  const token = jwt.sign({ sub: user.id, username: user.username }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+  const token = jwt.sign({ sub: user.id, username: user.username }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1s' });
   console.log('login successful, token generated');
   return res.json({ token: token });
 });

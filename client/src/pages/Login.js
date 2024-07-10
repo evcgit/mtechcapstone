@@ -23,7 +23,6 @@ function Login() {
 			password: password,
 		};
 
-		console.log(userData);
 		fetch('/login', {
 			method: 'POST',
 			headers: {
