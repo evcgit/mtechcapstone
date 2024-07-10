@@ -1,18 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import backgroundImage from '../assets/university.jpg';
 
 function Login() {
-	const [data, setData] = React.useState(null);
 	const [username, setUsername] = React.useState('');
 	const [password, setPassword] = React.useState('');
 	const navigate = useNavigate();
-
-	React.useEffect(() => {
-		fetch("/api")
-			.then((res) => res.json())
-			.then((data) => setData(data.message));
-	}, []);
-
 
 
 	const handleSubmit = (e) => {
@@ -47,9 +40,13 @@ function Login() {
 	};
 
 	return (
-	<div className='flex justify-center items-center h-screen bg-gray-600'>
+		<div className="flex items-center justify-center h-screen bg-cover"
+		style={{
+			backgroundImage: `url(${backgroundImage})`,
+		}}>
 			<div className='bg-white p-6 rounded-lg shadow-lg'>
-				<h1 className='text-2xl font-bold mb-4 text-center'> {data ? data : "Pending backend startup"} </h1>
+				<h1 className='text-2xl font-bold mb-4 text-gray-600'> BBU </h1>
+				<h3 className='text-lg font-semibold mb-4 text-gray-600'>Login</h3>
     			<form className='flex flex-col' onSubmit={handleSubmit}>
 					<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="username" placeholder='Username'className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none'/>
 					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder='Password'className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none'/>
