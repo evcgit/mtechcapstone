@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode';
-import Header from '../components/Header';
+// import Header from '../components/Header';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -29,7 +29,9 @@ const Home = () => {
   }, [navigate]);
 
   return (
-		<Header />
+    <>
+    </>
+		// <Header />
   );
 };
 

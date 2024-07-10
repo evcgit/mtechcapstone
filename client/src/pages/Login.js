@@ -47,17 +47,19 @@ function Login() {
 			});
 	};
 
-  return (
-		<div className='flex justify-center flex-col content-center items-center h-screen bg-gray-600'>
-			<h1> {data ? data : "Pending backend startup"} </h1>
-    	<form className='flex flex-col' onSubmit={handleSubmit}>
-				<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="username" placeholder='Username'className='border-2 border-black rounded mb-2 p-1'/>
-				<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder='Password'className='border-2 border-black rounded mb-2 p-1'/>
-				<input type="submit" value="Login" className='bg-slate-500 hover:bg-slate-700 cursor-pointer text-white py-2 px-4 rounded mb-2'/>
-			</form>
-			<p className='text-white text-xs'>Don't have an account? <a href='/register' className='text-blue-400'>Register here</a></p>
-		</div>
-  );
+	return (
+	<div className='flex justify-center items-center h-screen bg-gray-600'>
+			<div className='bg-white p-6 rounded-lg shadow-lg'>
+				<h1 className='text-2xl font-bold mb-4 text-center'> {data ? data : "Pending backend startup"} </h1>
+    			<form className='flex flex-col' onSubmit={handleSubmit}>
+					<input type="text" value={username} onChange={(e) => setUsername(e.target.value)} name="username" placeholder='Username'className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none'/>
+					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder='Password'className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none'/>
+					<input type="submit" value="Login" className='bg-blue-500 hover:bg-blue-700 cursor-pointer text-white py-2 px-4 rounded mb-3 transition duration-300 ease-in-out'/>
+				</form>
+				<p className='text-gray-700 text-sm text-center'>Don't have an account? <a href='/register' className='text-blue-500 hover:underline'>Register here</a></p>
+			</div>
+	</div>
+);
 }
 
 export default Login;
