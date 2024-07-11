@@ -52,7 +52,7 @@ function Login() {
 					<input type="password" value={password} onChange={(e) => setPassword(e.target.value)} name="password" placeholder='Password'className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none'/>
 					<input type="submit" value="Login" className='bg-blue-500 hover:bg-blue-700 cursor-pointer text-white py-2 px-4 rounded mb-3 transition duration-300 ease-in-out'/>
 				</form>
-				<p className='text-gray-700 text-sm text-center'>Don't have an account? <a href='/register' className='text-blue-500 hover:underline'>Register here</a></p>
+				<p className='text-gray-700 text-sm text-center'>Don't have an account? <a href='/createAccount' className='text-blue-500 hover:underline'>Register here</a></p>
 			</div>
 	</div>
 );

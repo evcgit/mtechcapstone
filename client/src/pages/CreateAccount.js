@@ -1,7 +1,7 @@
 import React from "react";
 import backgroundImage from "../assets/registeruni.jpg";
 
-const Register = () => {
+const CreateAccount = () => {
   const [newUser, setNewUser] = React.useState('');
   const [newPassword, setNewPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -17,7 +17,7 @@ const Register = () => {
 			backgroundImage: `url(${backgroundImage})`,
 		}}>
       <div className="bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-2xl font-bold mb-4 text-center"> Register </h1>
+        <h1 className="text-2xl font-bold mb-4 text-center"> Create Account </h1>
         <form className="flex flex-wrap">
           <div className="flex flex-col w-full md:w-1/2 pr-2">
             <input
@@ -80,7 +80,7 @@ const Register = () => {
             />
             <input
               type="submit"
-              value="Create Account"
+              value="Submit"
               className="bg-blue-500 hover:bg-blue-700 cursor-pointer text-white py-2 px-4 rounded mb-3 transition duration-300 ease-in-out w-full"
               style={{ alignSelf: 'flex-end' }}
             />
@@ -95,4 +95,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default CreateAccount;
