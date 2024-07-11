@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 3001;
 const usersData = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW' }] };
 const users = usersData.users;
 
-app.use(express.static(path.resolve(__dirname, '../client')));
+app.use(express.static('../client'));
 app.use(express.json());
 
 app.get('/', (req, res) => {
