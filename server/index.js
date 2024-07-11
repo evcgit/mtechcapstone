@@ -8,8 +8,7 @@ const app = express();
 
 const JWT_SECRET = 'your_jwt_secret';
 const PORT = process.env.PORT || 3001;
-const usersData = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW' }] };
-const users = JSON.parse(usersData).users;
+const users = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW' }] };
 
 app.use(express.json());
 
