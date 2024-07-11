@@ -2,14 +2,13 @@ const express = require('express');
 const { get } = require('http');
 const jwt = require('jsonwebtoken');
 const { expressjwt } = require('express-jwt');
-const fs = require('fs');
 const bcrypt = require('bcrypt');
 const app = express();
 
 
 const JWT_SECRET = 'your_jwt_secret';
 const PORT = process.env.PORT || 3001;
-const usersData = fs.readFileSync('./data/users.json');
+const usersData = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW' }] };
 const users = JSON.parse(usersData).users;
 
 app.use(express.json());
