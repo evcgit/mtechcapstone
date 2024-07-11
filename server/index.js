@@ -38,6 +38,7 @@ app.post('/login', async (req, res) => {
   return res.json({ token: token });
 });
 
+
 app.listen(PORT, () => {
 	console.log(`Server is running on port ${PORT}`);
 });

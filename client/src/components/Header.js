@@ -16,15 +16,15 @@ const Header = () => {
         BBU
       </div>
       <nav className="flex-1 flex justify-center space-x-12">
-        <a href="#" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+        <a href="/register" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
           Register
           <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
         </a>
-        <a href="#" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+        <a href="/home" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
           Home
           <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
         </a>
-        <a href="#" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+        <a href="/profile" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
           Profile
           <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
         </a>
