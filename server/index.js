@@ -9,12 +9,10 @@ const PORT = process.env.PORT || 3001;
 const usersData = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJrkuOMtDQooeMZ8I5uhMQo6YZ3KO0R/lisNdNxxGdbFHX3xLW' }] };
 const users = usersData.users;
 
-app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.send('Welcome to the backend!');
-});
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../client/build')));
 
 app.get('/api', (req, res) => {
     res.json({ message: 'Backend Online!' });
@@ -38,6 +36,11 @@ app.post('/login', async (req, res) => {
     const token = jwt.sign({ sub: user.id, username: user.username }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
     console.log('login successful, token generated');
     return res.json({ token: token });
+});
+
+// Catch-all handler to serve the React app for any unknown routes
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build/index.html'));
 });
 
 app.listen(PORT, () => {
