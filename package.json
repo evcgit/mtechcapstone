@@ -14,7 +14,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "build": "cd server && npm i && cd ../client && npm i && npm run build"
+    "build": "cd server && npm i && cd ../client && npm i && npm run build",
+    "start": "node server/server.js"
+  },
+  "engines": {
+    "node": "v20.11.0"
   },
   "keywords": [],
   "author": "",
