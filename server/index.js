@@ -10,6 +10,7 @@ const usersData = { users: [{ id: 1, username: 'admin', password: '$2a$10$Xe6dJr
 const users = usersData.users;
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../client/build')));
