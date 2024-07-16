@@ -2,7 +2,6 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-jwt": "^8.4.1",
     "jsonwebtoken": "^9.0.2",
@@ -15,6 +14,7 @@
   "main": "index.js",
   "scripts": {
     "build": "cd server && npm i && cd ../client && npm i && npm run build",
+    "local": "node -r dotenv/config --watch server/index.js",
     "start": "node server/index.js"
   },
   "engines": {
@@ -22,5 +22,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  }
 }
