@@ -3,6 +3,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const app = express();
+const pool = require('./database');
 
 const JWT_SECRET = 'your_jwt_secret';
 const PORT = process.env.PORT || 3001;
@@ -45,5 +46,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT} Database_url: ${process.env.DATABASE_URL}`);
 });
