@@ -11,6 +11,48 @@ const CreateAccount = () => {
   const [lastName, setLastName] = React.useState('');
   const [phone, setPhone] = React.useState('');
 
+  const handleSubmit = (e) => {
+		e.preventDefault();
+
+		const userData = {
+			username: newUser,
+			password: newPassword,
+      confirmPassword: confirmPassword,
+      email: email,
+      firstName: firstName,
+      lastName: lastName,
+      userAdmin: false,
+      phone: phone
+		};
+
+		fetch('/createAccount', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(userData),
+		})
+			.then((res) => res.json())
+			.then((data) => {
+				console.log(data);
+				if (data.errorMessage) {
+					alert(data.errorMessage);
+				}
+				else {
+          setNewUser('');
+          setNewPassword('');
+          setConfirmPassword('');
+          setEmail('');
+          setFirstName('');
+          setLastName('');
+          setPhone('');
+				}
+			})
+			.catch((error) => {
+				console.error('Error:', error);
+			});
+	};
+
   return (
     <div className="flex items-center justify-center h-screen bg-cover"
 		style={{
@@ -18,7 +60,7 @@ const CreateAccount = () => {
 		}}>
       <div className="bg-white p-6 rounded-lg shadow-lg">
         <h1 className="text-2xl font-bold mb-4 text-center"> Create Account </h1>
-        <form className="flex flex-wrap">
+        <form className="flex flex-wrap" onSubmit={handleSubmit}>
           <div className="flex flex-col w-full md:w-1/2 pr-2">
             <input
               type="text"
