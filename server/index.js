@@ -25,7 +25,7 @@ app.post('/login', async (req, res) => {
     let client;
 
     try {
-        client = await pool.connect(); // Acquire a client from the pool
+        client = await pool.connect(); 
         const result = await client.query('SELECT * FROM users WHERE username = $1', [username]);
 
         if (result.rows.length === 0) {
@@ -52,6 +52,39 @@ app.post('/login', async (req, res) => {
         }
     }
 });
+
+app.post('/createAccount', async (req, res) => {
+    const { username, password, confirmPassword, email, firstName, lastName, userAdmin, phone } = req.body;
+    let client;
+    if (userAdmin === null) {
+      userAdmin = false;
+    }
+    if (password !== confirmPassword) {
+        return res.status(400).json({ errorMessage: 'Passwords do not match' });
+    }
+
+    try {
+        client = await pool.connect();
+        const existingUser = await client.query('SELECT * FROM users WHERE username = $1 OR user_email = $2', [username, email]);
+        if (existingUser.rows.length > 0) {
+          console.log('Username or email already exists');
+          return res.status(400).json({ errorMessage: 'Username or email already exists' });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone) VALUES ($1, $2, $3, $4, $5, $6, $7)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone]);
+        console.log('account created');
+        return res.json({ message: 'Account created' });
+    } catch (err) {
+        console.error('Error creating account', err);
+        return res.status(500).json({ errorMessage: 'Internal server error' });
+    } finally {
+        if (client) {
+            client.release();
+        }
+    }
+});
+
+
 
 // Catch-all handler to serve the React app for any unknown routes
 app.get('*', (req, res) => {
