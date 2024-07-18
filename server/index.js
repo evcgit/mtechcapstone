@@ -7,8 +7,8 @@ const app = express();
 const { Pool } = require('pg');
 
 let dbConfig = {
-  connectionString: process.env.DATABASE_URL,
-  ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false
+    connectionString: process.env.DATABASE_URL,
+    ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : false
 };
 
 
@@ -116,6 +116,21 @@ app.post('/user/profile', async (req, res) => {
 	}
 });
 
+app.get('/courses', async (req, res) => {
+    try {
+        const client = await pool.connect();
+        const result = await client.query('SELECT * FROM courses');
+        client.release();
+
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error fetching courses:', error);
+        res.status(500).json({ error: 'Failed to fetch courses' });
+    }
+});
+
+
+
 
 
 
@@ -125,5 +140,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} local_Database_url: ${process.env.DATABASE_URL}`);
+    console.log(`Server is running on port ${PORT} Database_url: ${process.env.DATABASE_URL}`);
 });
