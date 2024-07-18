@@ -92,5 +92,5 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} local_Database_url: ${process.env.local_DATABASE_URL}`);
+    console.log(`Server is running on port ${PORT} Database_url: ${process.env.DATABASE_URL}`);
 });
