@@ -87,27 +87,20 @@ app.post('/user/profile', async (req, res) => {
 	const { token } = req.body;
 
 	try {
-			// Verify the JWT token
 			const decoded = jwt.verify(token, JWT_SECRET);
 
 			const client = await pool.connect();
 			const result = await client.query('SELECT * FROM users WHERE username = $1', [decoded.username]);
 			client.release();
-
 			if (result.rows.length === 0) {
 					return res.status(404).json({ error: 'User not found' });
 			}
-
-			// Extract user data from the query result
 			const userData = result.rows[0];
-
-			// Return the user data
 			res.status(200).json({
 					first_name: userData.first_name,
 					last_name: userData.last_name,
 					user_email: userData.user_email,
 					user_phone: userData.user_phone,
-					username: userData.username,
 			});
 			console.log('User profile fetched successfully:', userData);
 	} catch (error) {
