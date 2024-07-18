@@ -7,40 +7,55 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
 
     const totalPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.cost.replace('$', '')), 0);
 
-    const handleRemoveItem = (course_id, title) => {
-        setItemToRemove({ course_id, title });
-        setShowConfirmation(true);
+    // Function to handle removing an item
+    const handleRemoveItem = (string_id, title) => {
+        setItemToRemove({ string_id, title }); // Set the item to remove
+        setShowConfirmation(true); // Show confirmation modal
     };
 
+    // Function to confirm item removal
     const confirmRemoveItem = () => {
-        const updatedCartItems = cartItems.filter(item => item.course_id !== itemToRemove.course_id);
-        setCartItems(updatedCartItems);
-        setShowConfirmation(false);
+        if (!itemToRemove) {
+            setShowConfirmation(false); // Close confirmation modal if no item to remove
+            return;
+        }
+        const updatedCartItems = cartItems.filter(item => item.string_id !== itemToRemove.string_id);
+        setCartItems(updatedCartItems); // Update cart items
+        setShowConfirmation(false); // Close confirmation modal
+        setItemToRemove(null); // Reset item to remove
     };
 
+    // Function to cancel item removal
     const cancelRemoveItem = () => {
-        setShowConfirmation(false);
+        setShowConfirmation(false); // Close confirmation modal
+        setItemToRemove(null); // Reset item to remove
     };
 
     return (
         <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
             <h2 className='text-xl font-semibold'>Selected Classes</h2>
-            <div className='flex-grow mt-2 overflow-y-auto max-h-full'>
+            <div className='flex-grow mt-2 overflow-y-auto max-h-full' style={
+                {
+                    minHeight: '60vh',
+                    maxHeight: '60vh'
+                }
+            }>
                 <div className='mt-4'>
                     {cartItems.length === 0 ? (
-                        <p>Your cart is empty</p>
+                        <p className='text-2xl'>Your cart is empty</p>
                     ) : (
-                        <ul className="max-h-96 overflow-y-auto">
+                            <ul className="min-h-screen overflow-y-auto" style={
+                                {
+                                    minHeight: '60vh'
+                                }
+                        }>
                             {cartItems.map(item => (
-                                <li key={item.course_id} className='flex justify-between items-center mb-2'>
+                                <li key={item.string_id} className='flex justify-between items-center mb-2'>
                                     <div className='relative group'>
                                         <span className='cursor-pointer'>{item.title} - {item.cost}</span>
-                                        <div className='absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-max px-3 py-2 bg-gray-900 text-white text-xs rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300'>
-                                            {item.course_id}
-                                        </div>
                                     </div>
                                     <button
-                                        onClick={() => handleRemoveItem(item.course_id, item.title)}
+                                        onClick={() => handleRemoveItem(item.string_id, item.title)}
                                         className='bg-transparent border-2 rounded px-2 border-red-400 text-red-600 hover:bg-red-400 hover:text-white transition duration-300'>
                                         Remove
                                     </button>
@@ -63,7 +78,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
             <ConfirmationModal
                 isOpen={showConfirmation}
                 title={`Remove ${itemToRemove?.title}`}
-                message={`Are you sure you want to remove ${itemToRemove?.title} (${itemToRemove?.course_id}) from the cart?`}
+                message={itemToRemove ? `Are you sure you want to remove ${itemToRemove.title} (${itemToRemove.string_id}) from the cart?` : ''}
                 onConfirm={confirmRemoveItem}
                 onCancel={cancelRemoveItem}
             />
