@@ -85,14 +85,6 @@ const Profile = () => {
                                         className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
                                         disabled={true}
                                     />
-                                    <input
-                                        type="text"
-                                        value={username || ''}
-                                        name="username"
-                                        placeholder="Username"
-                                        className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
-                                        disabled={true}
-                                    />
                                     <div />
                                     <button
                                         className='mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-300'
@@ -104,67 +96,62 @@ const Profile = () => {
                             </div>
                         </div>
                     ) : (
-                        <form className="flex flex-wrap">
-                            <div className="flex flex-col w-full md:w-1/2 pr-2">
-                                <input
-                                    type="text"
-                                    value={firstName}
-                                    onChange={(e) => setUpdatedFirstName(e.target.value)}
-                                    name="firstName"
-                                    placeholder="First Name"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
+                        <form>
+                            <div className='space-y-4'>
+                                <div className="flex flex-col w-full">
+                                    <div className='text-center'>
                                     <input
-                                    type="text"
-                                    value={lastName}
-                                    onChange={(e) => setUpdatedLastName(e.target.value)}
-                                    name="lastName"
-                                    placeholder="Last Name"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
-                                <input
-                                    type="email"
-                                    value={email}
-                                    onChange={(e) => setUpdatedEmail(e.target.value)}
-                                    name="email"
-                                    placeholder="Email"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+                                        type="text"
+                                        value={firstName}
+                                        onChange={(e) => setUpdatedFirstName(e.target.value)}
+                                        name="firstName"
+                                        placeholder="First Name"
+                                        className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
                                     />
-                                     <input
-                                    type="tel"
-                                    value={phone}
-                                    onChange={(e) => setUpdatedPhone(e.target.value)}
-                                    name="phone"
-                                    placeholder="Phone Number"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
-                                <input
-                                    type="text"
-                                    value={username}
-                                    onChange={(e) => setUpdatedUserName(e.target.value)}
-                                    name="username"
-                                    placeholder="Create Username"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
-                            </div>
-                            <div className="flex flex-col w-full md:w-1/2 pl-2">
-                                
-                               
-                                <div className="flex justify-between">
-                                    <button
-                                        type="button"
-                                        className="m-0.5 px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300"
-                                        onClick={() => setEditMode(false)}
-                                    >
-                                        Save
-                                    </button>
-                                    <button
-                                        type="button"
-                                        className="m-0.5 px-6 py-2 bg-white text-red-500 font-semibold rounded-lg shadow hover:text-white hover:bg-red-500 transition duration-300"
-                                        onClick={() => setEditMode(false)}
-                                    >
-                                        Cancel
-                                    </button>
+                                    <input
+                                        type="text"
+                                        value={lastName}
+                                        onChange={(e) => setUpdatedLastName(e.target.value)}
+                                        name="lastName"
+                                        placeholder="Last Name"
+                                        className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
+                                    />
+                                    <input
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setUpdatedEmail(e.target.value)}
+                                        name="email"
+                                        placeholder="Email"
+                                        className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
+                                    />
+                                    <input
+                                        type="tel"
+                                        value={phone}
+                                        onChange={(e) => setUpdatedPhone(e.target.value)}
+                                        name="phone"
+                                        placeholder="Phone Number"
+                                        className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1"
+                                    />
+                                </div>
+                                <div className="flex flex-col w-full pl-2">
+                                    <div className="flex justify-center">
+                                        
+                                        <button
+                                            type="button"
+                                            className="m-0.5 px-6 py-2 bg-white text-red-500 font-semibold rounded-lg shadow hover:text-white hover:bg-red-500 transition duration-300"
+                                            onClick={() => setEditMode(false)}
+                                        >
+                                            Cancel
+                                                </button>
+                                                <button
+                                            type="button"
+                                            className="m-0.5 px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300 mx-5"
+                                            onClick={() => setEditMode(false)}
+                                        >
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
                                 </div>
                             </div>
                         </form>
