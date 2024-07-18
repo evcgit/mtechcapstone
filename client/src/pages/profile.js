@@ -10,14 +10,46 @@ const Profile = () => {
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
-    const [username, setUserName] = useState('');
     const [updatedFirstName, setUpdatedFirstName] = useState('');
     const [updatedLastName, setUpdatedLastName] = useState('');
     const [updatedEmail, setUpdatedEmail] = useState('');
     const [updatedPhone, setUpdatedPhone] = useState('');
-    const [updatedUserName, setUpdatedUserName] = useState('');
+
+    const handleSave = () => {
+      const updatedData = {
+        firstName: updatedFirstName,
+        lastName: updatedLastName,
+        email: updatedEmail,
+        phone: updatedPhone
+      };
+
+      fetch('/user/profile/update', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: localStorage.getItem('token'), updatedData }),
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          alert(data.error);
+        } else {
+          setFirstName(data.firstName);
+          setLastName(data.lastName);
+          setEmail(data.email);
+          setPhone(data.phone);
+          setEditMode(false);
+        }
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert('Failed to update profile');
+      });
+    };
 
     useEffect(() => {
+      const fetchProfileInfo = async () => {
         fetch('/user/profile', {
             method: 'POST',
             headers: {
@@ -35,12 +67,13 @@ const Profile = () => {
                     setLastName(data.last_name);
                     setEmail(data.user_email);
                     setPhone(data.user_phone);
-                    setUserName(data.username);
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
+          };
+          fetchProfileInfo();
     }, []);
 
     return (
@@ -88,7 +121,13 @@ const Profile = () => {
                                     <div />
                                     <button
                                         className='mt-4 px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition duration-300'
-                                        onClick={() => setEditMode(true)}
+                                        onClick={ () => {
+                                            setUpdatedFirstName(firstName);
+                                            setUpdatedLastName(lastName);
+                                            setUpdatedEmail(email);
+                                            setUpdatedPhone(phone);
+                                            setEditMode(true)
+                                        }}
                                     >
                                         Edit
                                     </button>
@@ -102,7 +141,7 @@ const Profile = () => {
                                     <div className='text-center'>
                                     <input
                                         type="text"
-                                        value={firstName}
+                                        value={updatedFirstName}
                                         onChange={(e) => setUpdatedFirstName(e.target.value)}
                                         name="firstName"
                                         placeholder="First Name"
@@ -110,7 +149,7 @@ const Profile = () => {
                                     />
                                     <input
                                         type="text"
-                                        value={lastName}
+                                        value={updatedLastName}
                                         onChange={(e) => setUpdatedLastName(e.target.value)}
                                         name="lastName"
                                         placeholder="Last Name"
@@ -118,7 +157,7 @@ const Profile = () => {
                                     />
                                     <input
                                         type="email"
-                                        value={email}
+                                        value={updatedEmail}
                                         onChange={(e) => setUpdatedEmail(e.target.value)}
                                         name="email"
                                         placeholder="Email"
@@ -126,7 +165,7 @@ const Profile = () => {
                                     />
                                     <input
                                         type="tel"
-                                        value={phone}
+                                        value={updatedPhone}
                                         onChange={(e) => setUpdatedPhone(e.target.value)}
                                         name="phone"
                                         placeholder="Phone Number"
@@ -146,7 +185,7 @@ const Profile = () => {
                                                 <button
                                             type="button"
                                             className="m-0.5 px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300 mx-5"
-                                            onClick={() => setEditMode(false)}
+                                            onClick={handleSave}
                                         >
                                             Save
                                         </button>
