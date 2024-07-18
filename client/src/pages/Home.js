@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
-import useAuth from '../auth/auth';
+import { useAuth } from '../auth/auth';
 import Card from '../components/Card';
 import Calendar from '../components/Calender';
 
