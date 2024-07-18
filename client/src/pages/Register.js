@@ -26,7 +26,6 @@ const Register = () => {
     const addToCart = (course) => {
         setCartItems([...cartItems, course]);
     };
-
     return (
         <div className='bg-gray-900 min-h-screen w-screen flex flex-col'>
             <Header />
@@ -67,7 +66,6 @@ const Register = () => {
                                 cost: '$1200.00'
                             })}
                         />
-                        {/* Add more RegisterCard components as needed */}
                     </div>
                 </div>
                 <div className="w-1/3 ml-20">
