@@ -3,49 +3,45 @@ import Header from '../components/Header';
 import { useAuth } from '../auth/auth';
 
 const Profile = () => {
-  useAuth();
+    useAuth();
 
-	const [editMode, setEditMode] = useState(false);
+    const [editMode, setEditMode] = useState(false);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
+    const [username, setUserName] = useState('');
+    const [updatedFirstName, setUpdatedFirstName] = useState('');
+    const [updatedLastName, setUpdatedLastName] = useState('');
+    const [updatedEmail, setUpdatedEmail] = useState('');
+    const [updatedPhone, setUpdatedPhone] = useState('');
+    const [updatedUserName, setUpdatedUserName] = useState('');
 
-
-	const [firstName, setFirstName] = useState('');
-	const [lastName, setLastName] = useState('');
-	const [email, setEmail] = useState('');
-	const [phone, setPhone] = useState('');
-	const [username, setUserName] = useState('');
-	const [updatedFirstName, setUpdatedFirstName] = useState('');
-	const [updatedLastName, setUpdatedLastName] = useState('');
-	const [updatedEmail, setUpdatedEmail] = useState('');
-	const [updatedPhone, setUpdatedPhone] = useState('');
-	const [updatedUserName, setUpdatedUserName] = useState('');
-		
-  useEffect(() => {
-    fetch('/user/profile', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: localStorage.getItem('token') }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (data.error) {
-          alert(data.error);
-        } else {
-          setFirstName(data.first_name);
-          setLastName(data.last_name);
-          setEmail(data.user_email);
-          setPhone(data.user_phone);
-          setUserName(data.username);
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, []);
-
-
+    useEffect(() => {
+        fetch('/user/profile', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ token: localStorage.getItem('token') }),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data);
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    setFirstName(data.first_name);
+                    setLastName(data.last_name);
+                    setEmail(data.user_email);
+                    setPhone(data.user_phone);
+                    setUserName(data.username);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    }, []);
 
     return (
         <div className='bg-gray-900 h-screen w-screen flex flex-col'>
@@ -118,12 +114,28 @@ const Profile = () => {
                                     placeholder="First Name"
                                     className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
                                 />
+                                    <input
+                                    type="text"
+                                    value={lastName}
+                                    onChange={(e) => setUpdatedLastName(e.target.value)}
+                                    name="lastName"
+                                    placeholder="Last Name"
+                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+                                />
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setUpdatedEmail(e.target.value)}
                                     name="email"
                                     placeholder="Email"
+                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+                                    />
+                                     <input
+                                    type="tel"
+                                    value={phone}
+                                    onChange={(e) => setUpdatedPhone(e.target.value)}
+                                    name="phone"
+                                    placeholder="Phone Number"
                                     className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
                                 />
                                 <input
@@ -136,27 +148,13 @@ const Profile = () => {
                                 />
                             </div>
                             <div className="flex flex-col w-full md:w-1/2 pl-2">
-                                <input
-                                    type="text"
-                                    value={lastName}
-                                    onChange={(e) => setUpdatedLastName(e.target.value)}
-                                    name="lastName"
-                                    placeholder="Last Name"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
-                                <input
-                                    type="tel"
-                                    value={phone}
-                                    onChange={(e) => setUpdatedPhone(e.target.value)}
-                                    name="phone"
-                                    placeholder="Phone Number"
-                                    className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
-                                />
+                                
+                               
                                 <div className="flex justify-between">
                                     <button
                                         type="button"
                                         className="m-0.5 px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300"
-                                        onClick={setEditMode(false)}
+                                        onClick={() => setEditMode(false)}
                                     >
                                         Save
                                     </button>
