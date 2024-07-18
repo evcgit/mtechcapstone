@@ -102,11 +102,27 @@ app.post('/user/profile', async (req, res) => {
 					user_email: userData.user_email,
 					user_phone: userData.user_phone,
 			});
-			console.log('User profile fetched successfully:', userData);
 	} catch (error) {
 			console.error('Error fetching user profile:', error);
 			res.status(500).json({ error: 'Failed to fetch user profile' });
 	}
+});
+
+app.post('/user/profile/update', async (req, res) => {
+  const { token, updatedData } = req.body;
+
+  try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+
+      const client = await pool.connect();
+      await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [updatedData.firstName, updatedData.lastName, updatedData.email, updatedData.phone, decoded.username]);
+      client.release();
+      res.status(200).json(updatedData);
+      console.log('User profile updated successfully:', updatedData);
+  } catch (error) {
+      console.error('Error updating user profile:', error);
+      res.status(500).json({ error: 'Failed to update user profile' });
+  }
 });
 
 
