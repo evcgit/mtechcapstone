@@ -31,7 +31,7 @@ function Login() {
 				}
 				else {
 					localStorage.setItem('token', data.token);
-					navigate('/home');
+					navigate(data.isAdmin ? '/admin/home' : '/home');
 				}
 			})
 			.catch((error) => {

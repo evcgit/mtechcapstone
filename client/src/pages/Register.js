@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Header from '../components/Header';
-import useAuth from '../auth/auth';
+import { useAuth } from '../auth/auth';
 import RegisterCard from '../components/RegisterCard';
 import ShoppingCart from '../components/ShoppingCard';
 
