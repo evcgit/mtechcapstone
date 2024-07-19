@@ -51,7 +51,8 @@ const Register = () => {
 
     return (
         <div className='min-h-screen w-screen flex flex-col bg-cover'
-            style={{ backgroundImage: `url(${backgroundImage})` }}>
+            style={{ backgroundImage: `url(${backgroundImage})` }}
+        >
             {loading ? (
                 <LoadingSpinner />
             ) : (
@@ -82,6 +83,7 @@ const Register = () => {
                                 ))}
                             </div>
                         </div>
+
                         <div className="w-2/4 ml-20 flex justify-end">
                             <div className="w-2/3">
                                 <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} />

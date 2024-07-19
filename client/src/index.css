@@ -16,6 +16,10 @@ code {
     monospace;
 }/* Custom Scrollbar Styles */
 /* Custom Scrollbar Styles */
+.custom-scrollbar {
+  position: relative; /* Ensure the custom scrollbar styles are relative to the element */
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px; /* Width of the scrollbar */
 }
@@ -36,9 +40,23 @@ code {
   border-radius: 10px; /* Rounded corners for the scrollbar track */
 }
 
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+  opacity: 1; /* Show scrollbar thumb when hovering over the element */
+}
+
+/* Alternative approach to ensure the scrollbar is visible while scrolling */
+.custom-scrollbar {
+  overflow: hidden; /* Hide scrollbar by default */
+}
+
+.custom-scrollbar:focus-within, .custom-scrollbar:hover {
+  overflow-y: scroll; /* Show scrollbar when element is focused or hovered */
+}
+
 .custom-scrollbar.show-scrollbar::-webkit-scrollbar-thumb {
   opacity: 1; /* Show scrollbar thumb while scrolling */
 }
+
 
 
 
