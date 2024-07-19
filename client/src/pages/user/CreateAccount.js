@@ -69,6 +69,7 @@ const CreateAccount = () => {
               name="firstName"
               placeholder="First Name"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="text"
@@ -103,6 +104,7 @@ const CreateAccount = () => {
               name="username"
               placeholder="Create Username"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="password"
@@ -111,6 +113,7 @@ const CreateAccount = () => {
               name="password"
               placeholder="Create Password"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="password"
@@ -119,6 +122,7 @@ const CreateAccount = () => {
               name="confirmPassword"
               placeholder="Confirm Password"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="submit"

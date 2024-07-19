@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../../assets/university.jpg';
 import LoadingSpinner  from '../../components/LoadingSpinner';
@@ -8,6 +8,10 @@ function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+	useEffect(() => {
+		localStorage.getItem('token') && navigate('/home')
+	}, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
