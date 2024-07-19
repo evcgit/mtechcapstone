@@ -3,25 +3,27 @@ import Header from '../../components/Header';
 import RegisterCard from '../../components/RegisterCard';
 import ShoppingCart from '../../components/ShoppingCard';
 import backgroundImage from '../../assets/registerbg.webp';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 const Register = () => {
-    // State to track open cards
+    
     const [openCards, setOpenCards] = useState([]);
-
-    // State to track shopping cart items
     const [cartItems, setCartItems] = useState([]);
-
-    // State to store courses fetched from the server
     const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Fetch courses from the server
+
+    
     useEffect(() => {
         const fetchCourses = async () => {
             try {
                 const response = await fetch('/courses');
                 if (response.ok) {
                     const data = await response.json();
-                    setCourses(data); 
+                    setTimeout(() => {
+                      setCourses(data);
+                      setLoading(false); 
+                    }, 700); 
                 } else {
                     console.error('Failed to fetch courses');
                 }
@@ -48,6 +50,10 @@ const Register = () => {
     return (
         <div className='min-h-screen w-screen flex flex-col bg-cover'
 					style={{backgroundImage: `url(${backgroundImage})`}}>
+            {loading ? (
+                <LoadingSpinner />
+            ) : (
+              <>
             <Header />
             <div className='flex flex-grow p-20'>
                 <div className="custom-scrollbar w-2/3 ml-10 overflow-y-auto p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md" style={{maxHeight: '75vh', minHeight: '75vh' }}>
@@ -80,6 +86,8 @@ const Register = () => {
                     </div>
                 </div>
             </div>
+            </>
+          )}
         </div>
     );
 }
