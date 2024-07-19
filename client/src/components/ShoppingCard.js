@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import ConfirmationModal from './ConfirmationModal'; // Adjust the path based on your file structure
+import ConfirmationModal from './ConfirmationModal'; 
+import trashcangif from '../assets/icons8-trash.svg';
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
@@ -12,7 +13,6 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
         setShowConfirmation(true); 
     };
 
-    
     const confirmRemoveItem = () => {
         if (!itemToRemove) {
             setShowConfirmation(false);
@@ -32,21 +32,17 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
     return (
         <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
             <h2 className='text-xl font-semibold'>Selected Classes</h2>
-            <div className='flex-grow mt-2 overflow-y-auto max-h-full' style={
-                {
-                    minHeight: '60vh',
-                    maxHeight: '60vh'
-                }
-            }>
+            <div className='flex-grow mt-2 overflow-y-auto max-h-full' style={{
+                minHeight: '60vh',
+                maxHeight: '60vh'
+            }}>
                 <div className='mt-4'>
                     {cartItems.length === 0 ? (
                         <p className='text-2xl'>No Classes Selected</p>
                     ) : (
-                            <ul className="min-h-screen overflow-y-auto" style={
-                                {
-                                    minHeight: '60vh'
-                                }
-                        }>
+                        <ul className="min-h-screen overflow-y-auto" style={{
+                            minHeight: '60vh'
+                        }}>
                             {cartItems.map(item => (
                                 <li key={item.string_id} className='flex justify-between items-center mb-2'>
                                     <div className='relative group'>
@@ -54,8 +50,8 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                                     </div>
                                     <button
                                         onClick={() => handleRemoveItem(item.string_id, item.title)}
-                                        className='bg-transparent border-2 rounded px-2 border-red-400 text-red-600 hover:bg-red-400 hover:text-white transition duration-300'>
-                                        Remove
+                                        className=''>
+                                        <img src={trashcangif} alt='Remove' className='w-4 h-4'/>
                                     </button>
                                 </li>
                             ))}
@@ -68,7 +64,10 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     <h3 className='text-lg font-semibold'>Total Price: ${totalPrice.toFixed(2)}</h3>
                     <h2 className='text-md text-gray-700'>Total Classes: {cartItems.length}</h2>
                 </div>
-                <button className='bg-slate-500 text-white px-4 py-2 rounded hover:bg-slate-600 transition duration-300'>
+                <button
+                    className={`bg-slate-500 text-white px-4 py-2 rounded transition duration-300 ${cartItems.length > 0 ? 'hover:bg-slate-600' : 'bg-slate-300 cursor-not-allowed'}`}
+                    disabled={cartItems.length === 0}
+                >
                     Register
                 </button>
             </div>
