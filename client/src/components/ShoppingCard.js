@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import ConfirmationModal from './ConfirmationModal'; 
+import CheckoutModal from './CheckoutModal';
 import trashcangif from '../assets/icons8-trash.svg';
 
 const ShoppingCart = ({ cartItems, setCartItems }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [itemToRemove, setItemToRemove] = useState(null);
+    const [showCheckout, setShowCheckout] = useState(false);
 
     const totalPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.cost.replace('$', '')), 0);
 
@@ -27,6 +29,14 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
     const cancelRemoveItem = () => {
         setShowConfirmation(false); 
         setItemToRemove(null); 
+    };
+
+    const handleRegisterClick = () => {
+        setShowCheckout(true);
+    };
+
+    const closeCheckoutModal = () => {
+        setShowCheckout(false);
     };
 
     return (
@@ -65,6 +75,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     <h2 className='text-md text-gray-700'>Total Classes: {cartItems.length}</h2>
                 </div>
                 <button
+                    onClick={handleRegisterClick}
                     className={`bg-slate-500 text-white px-4 py-2 rounded transition duration-300 ${cartItems.length > 0 ? 'hover:bg-slate-600' : 'bg-slate-300 cursor-not-allowed'}`}
                     disabled={cartItems.length === 0}
                 >
@@ -78,6 +89,13 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                 message={itemToRemove ? `Are you sure you want to remove ${itemToRemove.title} (${itemToRemove.string_id}) from the cart?` : ''}
                 onConfirm={confirmRemoveItem}
                 onCancel={cancelRemoveItem}
+            />
+
+            <CheckoutModal
+                isOpen={showCheckout}
+                onRequestClose={closeCheckoutModal}
+                cartItems={cartItems}
+                totalPrice={totalPrice}
             />
         </div>
     );

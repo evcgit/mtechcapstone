@@ -14,32 +14,32 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
-
-/* index.css */
-
+}/* Custom Scrollbar Styles */
 /* Custom Scrollbar Styles */
 .custom-scrollbar::-webkit-scrollbar {
-	background: transparent;
   width: 8px; /* Width of the scrollbar */
-	height: 60vh;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: transparent; /* Color of the scrollbar thumb */
+  background: rgba(255, 255, 255, 0.5); /* Initial color of the scrollbar thumb */
   border-radius: 10px; /* Rounded corners for the scrollbar thumb */
-	height: 10vh;
+  opacity: 0; /* Hidden by default */
+  transition: opacity 0.3s ease; /* Smooth transition for visibility */
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.8); /* Darker color on hover */
+  background: rgba(255, 255, 255, 0.8); /* Color of the scrollbar thumb while scrolling */
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent; /* Background color of the track */
   border-radius: 10px; /* Rounded corners for the scrollbar track */
-	height: 60vh;
 }
+
+.custom-scrollbar.show-scrollbar::-webkit-scrollbar-thumb {
+  opacity: 1; /* Show scrollbar thumb while scrolling */
+}
+
 
 
 body {

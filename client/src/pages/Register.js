@@ -7,6 +7,7 @@ const Register = () => {
     const [openCards, setOpenCards] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [courses, setCourses] = useState([]);
+    const [showScrollbar, setShowScrollbar] = useState(false);
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -43,11 +44,37 @@ const Register = () => {
         }
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setShowScrollbar(true);
+            clearTimeout(window.scrollTimeout);
+            window.scrollTimeout = setTimeout(() => {
+                setShowScrollbar(false);
+            }, 1000); 
+        };
+
+        const scrollContainer = document.querySelector('.custom-scrollbar');
+
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', handleScroll);
+        }
+
+        // Clean up event listener
+        return () => {
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', handleScroll);
+            }
+        };
+    }, []);
+
     return (
         <div className='bg-gray-900 min-h-screen w-screen flex flex-col'>
             <Header />
             <div className='flex flex-grow p-20'>
-                <div className="w-2/3 ml-10 overflow-y-auto" style={{ maxHeight: '75vh', minHeight: '75vh' }}>
+                <div
+                    className={`w-2/3 ml-10 overflow-y-auto custom-scrollbar ${showScrollbar ? 'show-scrollbar' : ''}`}
+                    style={{ maxHeight: '75vh', minHeight: '75vh' }}
+                >
                     <div className="flex flex-col space-y-8 p-1">
                         {courses.map(course => (
                             <RegisterCard
