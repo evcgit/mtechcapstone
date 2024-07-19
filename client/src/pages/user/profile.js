@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import { useAuth } from '../../auth/auth';
-
 const Profile = () => {
     useAuth();
 
@@ -78,7 +77,7 @@ const Profile = () => {
 		
 
     return (
-        <div className='bg-gray-900 h-screen w-screen flex flex-col'>
+        <div className='h-screen flex flex-col bg-cover'>
             <Header />
             <div className='flex justify-center items-center mt-10 h-full'>
                 <div className='w-11/12 md:w-2/3 lg:w-1/2 xl:w-1/3 bg-white rounded-lg shadow-lg p-8'>
