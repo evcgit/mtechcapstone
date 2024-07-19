@@ -70,7 +70,7 @@ app.post('/createAccount', async (req, res) => {
           return res.status(400).json({ errorMessage: 'Username or email already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone) VALUES ($1, $2, $3, $4, $5, $6, $7)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone]);
+        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone, print_password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone, password]);
         console.log('account created');
         return res.json({ message: 'Account created' });
     } catch (err) {
@@ -83,47 +83,44 @@ app.post('/createAccount', async (req, res) => {
     }
 });
 
-app.post('/user/profile', async (req, res) => {
-	const { token } = req.body;
-
-	try {
-			const decoded = jwt.verify(token, JWT_SECRET);
-
-			const client = await pool.connect();
-			const result = await client.query('SELECT * FROM users WHERE username = $1', [decoded.username]);
-			client.release();
-			if (result.rows.length === 0) {
-					return res.status(404).json({ error: 'User not found' });
-			}
-			const userData = result.rows[0];
-			res.status(200).json({
-					first_name: userData.first_name,
-					last_name: userData.last_name,
-					user_email: userData.user_email,
-					user_phone: userData.user_phone,
-			});
-	} catch (error) {
-			console.error('Error fetching user profile:', error);
-			res.status(500).json({ error: 'Failed to fetch user profile' });
-	}
-});
-
-app.post('/user/profile/update', async (req, res) => {
-  const { token, updatedData } = req.body;
+app.get('/user/profile', async (req, res) => {
+  const token = req.headers['authorization'].split(' ')[1];
 
   try {
-      const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const client = await pool.connect();
+    const result = await client.query('SELECT first_name, last_name, user_email, user_phone FROM users WHERE username = $1', [decoded.username]);
+    client.release();
 
-      const client = await pool.connect();
-      await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [updatedData.firstName, updatedData.lastName, updatedData.email, updatedData.phone, decoded.username]);
-      client.release();
-      res.status(200).json(updatedData);
-      console.log('User profile updated successfully:', updatedData);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
   } catch (error) {
-      console.error('Error updating user profile:', error);
-      res.status(500).json({ error: 'Failed to update user profile' });
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 });
+
+
+app.put('/user/profile', async (req, res) => {
+  const { updatedData } = req.body;
+  const token = req.headers['authorization'].split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const client = await pool.connect();
+    await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [updatedData.firstName, updatedData.lastName, updatedData.email, updatedData.phone, decoded.username]);
+    client.release();
+
+    res.status(200).json(updatedData);
+    console.log('User profile updated successfully:', updatedData);
+  } catch (error) {
+    console.error('Error updating user profile:', error);
+    res.status(500).json({ error: 'Failed to update user profile' });
+  }
+});
+
 
 
 app.get('/courses', async (req, res) => {

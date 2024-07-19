@@ -7,28 +7,26 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
 
     const totalPrice = cartItems.reduce((acc, item) => acc + parseFloat(item.cost.replace('$', '')), 0);
 
-    // Function to handle removing an item
     const handleRemoveItem = (string_id, title) => {
-        setItemToRemove({ string_id, title }); // Set the item to remove
-        setShowConfirmation(true); // Show confirmation modal
+        setItemToRemove({ string_id, title }); 
+        setShowConfirmation(true); 
     };
 
-    // Function to confirm item removal
+    
     const confirmRemoveItem = () => {
         if (!itemToRemove) {
-            setShowConfirmation(false); // Close confirmation modal if no item to remove
+            setShowConfirmation(false);
             return;
         }
         const updatedCartItems = cartItems.filter(item => item.string_id !== itemToRemove.string_id);
-        setCartItems(updatedCartItems); // Update cart items
-        setShowConfirmation(false); // Close confirmation modal
-        setItemToRemove(null); // Reset item to remove
+        setCartItems(updatedCartItems); 
+        setShowConfirmation(false);
+        setItemToRemove(null);
     };
 
-    // Function to cancel item removal
     const cancelRemoveItem = () => {
-        setShowConfirmation(false); // Close confirmation modal
-        setItemToRemove(null); // Reset item to remove
+        setShowConfirmation(false); 
+        setItemToRemove(null); 
     };
 
     return (
@@ -42,7 +40,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
             }>
                 <div className='mt-4'>
                     {cartItems.length === 0 ? (
-                        <p className='text-2xl'>Your cart is empty</p>
+                        <p className='text-2xl'>No Classes Selected</p>
                     ) : (
                             <ul className="min-h-screen overflow-y-auto" style={
                                 {

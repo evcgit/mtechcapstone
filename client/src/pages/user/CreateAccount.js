@@ -1,5 +1,5 @@
 import React from "react";
-import backgroundImage from "../assets/registeruni.jpg";
+import backgroundImage from "../../assets/registeruni.jpg";
 
 const CreateAccount = () => {
   const [newUser, setNewUser] = React.useState('');

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import Header from '../components/Header';
-import RegisterCard from '../components/RegisterCard';
-import ShoppingCart from '../components/ShoppingCard';
+import Header from '../../components/Header';
+import RegisterCard from '../../components/RegisterCard';
+import ShoppingCart from '../../components/ShoppingCard';
+import backgroundImage from '../../assets/registerbg.webp';
 
 const Register = () => {
     // State to track open cards
@@ -20,7 +21,7 @@ const Register = () => {
                 const response = await fetch('/courses');
                 if (response.ok) {
                     const data = await response.json();
-                    setCourses(data);  // Assuming data is an array of course objects
+                    setCourses(data); 
                 } else {
                     console.error('Failed to fetch courses');
                 }
@@ -30,27 +31,26 @@ const Register = () => {
         };
 
         fetchCourses();
-    }, []);  // Empty dependency array ensures useEffect runs only once on component mount
+    }, []);
 
-    // Function to toggle a card
     const toggleCard = (stringId) => {
         if (openCards.includes(stringId)) {
-            setOpenCards(openCards.filter(id => id !== stringId)); // Close the card if already open
+            setOpenCards(openCards.filter(id => id !== stringId));
         } else {
-            setOpenCards([...openCards, stringId]); // Open the clicked card
+            setOpenCards([...openCards, stringId]);
         }
     };
 
-    // Function to add a course to the shopping cart
     const addToCart = (course) => {
         setCartItems([...cartItems, course]);
     };
 
     return (
-        <div className='bg-gray-900 min-h-screen w-screen flex flex-col'>
+        <div className='min-h-screen w-screen flex flex-col bg-cover'
+					style={{backgroundImage: `url(${backgroundImage})`}}>
             <Header />
             <div className='flex flex-grow p-20'>
-                <div className="w-2/3 ml-10 overflow-y-auto" style={{maxHeight: '75vh', minHeight: '75vh' }}>
+                <div className="custom-scrollbar w-2/3 ml-10 overflow-y-auto p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md" style={{maxHeight: '75vh', minHeight: '75vh' }}>
                     <div className="flex flex-col space-y-8 p-1">
                         {courses.map(course => (
                             <RegisterCard

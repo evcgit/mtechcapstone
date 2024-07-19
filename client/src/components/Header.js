@@ -1,17 +1,16 @@
 import React from "react";
 import { ReactComponent as LogoutIcon } from "../assets/logout.svg";
 import { useNavigate } from "react-router-dom";
- 
 
 const Header = () => {
-	const navigate = useNavigate();
-	const handleLogout = () => {
-		localStorage.removeItem('token');
-		navigate('/');
-	}
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
 
-	return (
-    <div className="flex items-center justify-between px-6 bg-gray-800 border-b-2 border-gray-700 h-16">
+  return (
+    <div className="flex items-center justify-between px-6 py-2 bg-white/20 backdrop-blur-md h-16 rounded shadow-md mx-4 mt-4">
       <div className="text-white text-2xl font-bold">
         BBU
       </div>
@@ -30,10 +29,11 @@ const Header = () => {
         </a>
       </nav>
       <div onClick={handleLogout} className="cursor-pointer">
-        <LogoutIcon className="w-6 h-6 text-gray-300 hover:text-white transition duration-300 ease-in-out"/>
+        <LogoutIcon className="w-6 h-6 text-gray-300 hover:text-white transition duration-300 ease-in-out" />
       </div>
     </div>
   );
 };
 
 export default Header;
+

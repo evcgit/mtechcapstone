@@ -1,11 +1,11 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
-import Home from './pages/Home';
-import CreateAccount from './pages/CreateAccount';
-import Profile from './pages/profile';
-import Register from './pages/Register';
-import AdminHome from './pages/AdminHome';
+import Login from './pages/user/Login';
+import Home from './pages/user/Home';
+import CreateAccount from './pages/user/CreateAccount';
+import Profile from './pages/user/profile';
+import Register from './pages/user/Register';
+import AdminHome from './pages/admin/AdminHome';
 
 function App() {
   return (

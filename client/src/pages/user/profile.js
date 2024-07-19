@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../components/Header';
-import { useAuth } from '../auth/auth';
+import Header from '../../components/Header';
+import { useAuth } from '../../auth/auth';
 
 const Profile = () => {
     useAuth();
@@ -23,58 +23,59 @@ const Profile = () => {
         phone: updatedPhone
       };
 
-      fetch('/user/profile/update', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ token: localStorage.getItem('token'), updatedData }),
-      })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.error) {
-          alert(data.error);
-        } else {
-          setFirstName(data.firstName);
-          setLastName(data.lastName);
-          setEmail(data.email);
-          setPhone(data.phone);
-          setEditMode(false);
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-        alert('Failed to update profile');
-      });
+				fetch('/user/profile', {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
+					},
+					body: JSON.stringify({ updatedData }),
+				})
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.error) {
+						alert(data.error);
+					} else {
+						setFirstName(data.firstName);
+						setLastName(data.lastName);
+						setEmail(data.email);
+						setPhone(data.phone);
+						setEditMode(false);
+					}
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+					alert('Failed to update profile');
+				});			
     };
 
-    useEffect(() => {
-      const fetchProfileInfo = async () => {
-        fetch('/user/profile', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ token: localStorage.getItem('token') }),
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                console.log(data);
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    setFirstName(data.first_name);
-                    setLastName(data.last_name);
-                    setEmail(data.user_email);
-                    setPhone(data.user_phone);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-          };
-          fetchProfileInfo();
-    }, []);
+		useEffect(() => {
+			const fetchProfileInfo = async () => {
+				fetch('/user/profile', {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
+					}
+				})
+				.then((res) => res.json())
+				.then((data) => {
+					if (data.error) {
+						alert(data.error);
+					} else {
+						setFirstName(data.first_name);
+						setLastName(data.last_name);
+						setEmail(data.user_email);
+						setPhone(data.user_phone);
+					}
+				})
+				.catch((error) => {
+					console.error('Error:', error);
+				});
+			};
+			fetchProfileInfo();
+		}, []);
+		
 
     return (
         <div className='bg-gray-900 h-screen w-screen flex flex-col'>

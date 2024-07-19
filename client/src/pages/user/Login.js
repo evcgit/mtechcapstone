@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import backgroundImage from '../assets/university.jpg';
+import backgroundImage from '../../assets/university.jpg';
 
 function Login() {
 	const [username, setUsername] = React.useState('');
@@ -8,36 +8,36 @@ function Login() {
 	const navigate = useNavigate();
 
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-
+	
 		const userData = {
 			username: username,
 			password: password,
 		};
-
-		fetch('/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(userData),
-		})
-			.then((res) => res.json())
-			.then((data) => {
-				console.log(data);
-				if (data.errorMessage) {
-					alert(data.errorMessage);
-				}
-				else {
-					localStorage.setItem('token', data.token);
-					navigate(data.isAdmin ? '/admin/home' : '/home');
-				}
-			})
-			.catch((error) => {
-				console.error('Error:', error);
+	
+		try {
+			const response = await fetch('/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(userData),
 			});
+	
+			const data = await response.json();
+	
+			if (data.errorMessage) {
+				alert(data.errorMessage);
+			} else {
+				localStorage.setItem('token', data.token);
+				navigate(data.isAdmin ? '/admin/home' : '/home');
+			}
+		} catch (error) {
+			console.error('Error:', error);
+		}
 	};
+	
 
 	return (
 		<div className="flex items-center justify-center h-screen bg-cover"
