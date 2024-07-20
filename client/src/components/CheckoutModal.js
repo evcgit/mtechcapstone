@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
+const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleConfirmPayment }) => {
     const [isPaymentView, setIsPaymentView] = useState(false);
     const [discountCode, setDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
@@ -24,6 +24,12 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
             alert('Invalid discount code');
         }
     };
+
+		const handleConfirmPaymentClose = (e) => {
+			handleConfirmPayment(e);
+			onRequestClose();
+			setIsPaymentView(false);
+		};
 
     return (
         <Modal
@@ -140,6 +146,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
                                     Back
                                 </button>
                                 <button
+																		onClick={handleConfirmPaymentClose}
                                     type="submit"
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600"
                                 >

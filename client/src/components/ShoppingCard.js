@@ -31,13 +31,35 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
         setItemToRemove(null); 
     };
 
-    const handleRegisterClick = () => {
-        setShowCheckout(true);
-    };
+		const toggleCheckoutModal = () => {
+			setShowCheckout(prevState => !prevState);
+		};
+	
 
-    const closeCheckoutModal = () => {
-        setShowCheckout(false);
-    };
+		const handleConfirmPayment = async (e) => {
+			e.preventDefault();
+			try {
+				const response = await fetch ('/courses/registered', {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
+					},
+					body: JSON.stringify({cartItems}),
+				});
+				const data = await response.json();
+
+				if (data.errorMessage) {
+					alert(data.errorMessage);
+				} else {
+					toggleCheckoutModal();
+					setCartItems([]);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('An error occurred. Please try again.');
+			}
+		};
 
     return (
         <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
@@ -75,7 +97,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     <h2 className='text-md text-gray-700'>Total Classes: {cartItems.length}</h2>
                 </div>
                 <button
-                    onClick={handleRegisterClick}
+                    onClick={toggleCheckoutModal}
                     className={`bg-slate-500 text-white px-4 py-2 rounded transition duration-300 ${cartItems.length > 0 ? 'hover:bg-slate-600' : 'bg-slate-300 cursor-not-allowed'}`}
                     disabled={cartItems.length === 0}
                 >
@@ -93,9 +115,10 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
 
             <CheckoutModal
                 isOpen={showCheckout}
-                onRequestClose={closeCheckoutModal}
+                onRequestClose={toggleCheckoutModal}
                 cartItems={cartItems}
                 totalPrice={totalPrice}
+								handleConfirmPayment={handleConfirmPayment}
             />
         </div>
     );

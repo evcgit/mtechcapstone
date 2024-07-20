@@ -43,9 +43,8 @@ const Register = () => {
     const addToCart = (course) => {
         if (!cartItems.some(item => item.string_id === course.string_id)) {
             setCartItems([...cartItems, course]);
-            alert('Course added to cart');
         } else {
-            alert('Course is already in the cart');
+            alert('Course is already selected');
         }
     };
 
