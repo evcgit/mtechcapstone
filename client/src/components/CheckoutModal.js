@@ -37,10 +37,10 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Checkout Modal"
-            className="fixed inset-0 flex items-center justify-center p-4"
-            overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-50"
+            className="fixed inset-0 flex items-center justify-center p-4 z-50"
+            overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-50 z-40"
         >
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-8 lg:mx-12">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-8 lg:mx-12 z-50">
                 {isPaymentView ? (
                     <div>
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Payment</h2>
