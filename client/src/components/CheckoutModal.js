@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
+const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleConfirmPayment }) => {
     const [isPaymentView, setIsPaymentView] = useState(false);
     const [discountCode, setDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
@@ -25,15 +25,22 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
         }
     };
 
+		const handleConfirmPaymentClose = (e) => {
+			e.preventDefault();
+			handleConfirmPayment(e);
+			onRequestClose();
+			setIsPaymentView(false);
+		};
+
     return (
         <Modal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Checkout Modal"
-            className="fixed inset-0 flex items-center justify-center p-4"
-            overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-50"
+            className="fixed inset-0 flex items-center justify-center p-4 z-50"
+            overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-50 z-40"
         >
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-8 lg:mx-12">
+            <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full mx-4 sm:mx-8 lg:mx-12 z-50">
                 {isPaymentView ? (
                     <div>
                         <h2 className="text-2xl font-semibold mb-4 text-gray-800">Payment</h2>
@@ -140,6 +147,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice }) => {
                                     Back
                                 </button>
                                 <button
+																		onClick={handleConfirmPaymentClose}
                                     type="submit"
                                     className="bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600"
                                 >

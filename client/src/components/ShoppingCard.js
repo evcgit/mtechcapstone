@@ -3,7 +3,7 @@ import ConfirmationModal from './ConfirmationModal';
 import CheckoutModal from './CheckoutModal';
 import trashcangif from '../assets/icons8-trash.svg';
 
-const ShoppingCart = ({ cartItems, setCartItems }) => {
+const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [itemToRemove, setItemToRemove] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
@@ -31,28 +31,21 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
         setItemToRemove(null); 
     };
 
-    const handleRegisterClick = () => {
-        setShowCheckout(true);
-    };
-
-    const closeCheckoutModal = () => {
-        setShowCheckout(false);
+    const toggleCheckoutModal = () => {
+        setShowCheckout(prevState => !prevState);
     };
 
     return (
-        <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
+        <div className='bg-slate-100 rounded p-4 md:p-10 flex flex-col'>
             <h2 className='text-xl font-semibold'>Selected Classes</h2>
-            <div className='flex-grow mt-2 overflow-y-auto max-h-full' style={{
-                minHeight: '60vh',
-                maxHeight: '60vh'
+            <div className='flex-grow mt-2 overflow-y-auto' style={{
+                maxHeight: '50vh',
             }}>
                 <div className='mt-4'>
                     {cartItems.length === 0 ? (
                         <p className='text-2xl'>No Classes Selected</p>
                     ) : (
-                        <ul className="min-h-screen overflow-y-auto" style={{
-                            minHeight: '60vh'
-                        }}>
+                        <ul>
                             {cartItems.map(item => (
                                 <li key={item.string_id} className='flex justify-between items-center mb-2'>
                                     <div className='relative group'>
@@ -75,7 +68,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     <h2 className='text-md text-gray-700'>Total Classes: {cartItems.length}</h2>
                 </div>
                 <button
-                    onClick={handleRegisterClick}
+                    onClick={toggleCheckoutModal}
                     className={`bg-slate-500 text-white px-4 py-2 rounded transition duration-300 ${cartItems.length > 0 ? 'hover:bg-slate-600' : 'bg-slate-300 cursor-not-allowed'}`}
                     disabled={cartItems.length === 0}
                 >
@@ -93,9 +86,10 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
 
             <CheckoutModal
                 isOpen={showCheckout}
-                onRequestClose={closeCheckoutModal}
+                onRequestClose={toggleCheckoutModal}
                 cartItems={cartItems}
                 totalPrice={totalPrice}
+                handleConfirmPayment={handleConfirmPayment}
             />
         </div>
     );

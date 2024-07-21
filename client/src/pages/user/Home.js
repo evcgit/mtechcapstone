@@ -50,24 +50,24 @@ const Home = () => {
   const toggleFall = () => setFallOpen(!fallOpen);
 
   return (
-    <div className='h-screen flex flex-col bg-cover' 
+    <div className='h-screen flex flex-col bg-cover bg-center' 
          style={{ backgroundImage: `url(${backgroundImage})` }}>
           {loading ? (
             <LoadingSpinner />
           ) : (
             <>
       <Header />
-      <div className='flex flex-grow'>
-        <div className='w-1/4 ml-12 rounded p-4 mt-4 h-5/6 bg-slate-100 overflow-hidden flex flex-col'>
+      <div className='flex flex-grow max-xl:flex-col'>
+        <div className='w-1/4 ml-12 rounded p-4 mt-4 h-5/6 max-xl:w-11/12 max-xl:ml-4 bg-slate-100 overflow-hidden flex flex-col'>
           <h2 className='text-2xl text-center font-semibold mb-2'>{new Date().toLocaleDateString()}</h2>
           <Calendar />
         </div>
 
-        <div className='flex-1 ml-4 mr-12 mt-4 flex flex-col space-y-4'>
+        <div className='flex-1 ml-4 mr-12 mt-4 flex flex-col space-y-4 max-xl:w-11/12 max-xl:ml-4'>
           <div className='bg-white/20 backdrop-blur-md rounded-3xl shadow-md p-6 flex justify-center items-center'>
-            <div className='text-white text-2xl font-bold'>
+            <p className='text-white text-2xl font-bold'>
               Welcome {firstName}!
-            </div>
+            </p>
           </div>
           
           <div className='p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md flex flex-col'>
