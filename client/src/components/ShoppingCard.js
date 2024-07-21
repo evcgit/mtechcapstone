@@ -31,16 +31,15 @@ const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
         setItemToRemove(null); 
     };
 
-		const toggleCheckoutModal = () => {
-			setShowCheckout(prevState => !prevState);
-		};
+    const toggleCheckoutModal = () => {
+        setShowCheckout(prevState => !prevState);
+    };
 
     return (
-        <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
+        <div className='bg-slate-100 rounded p-4 md:p-10 flex flex-col'>
             <h2 className='text-xl font-semibold'>Selected Classes</h2>
             <div className='flex-grow mt-2 overflow-y-auto' style={{
-                minHeight: '60vh',
-                maxHeight: '60vh'
+                maxHeight: '50vh',
             }}>
                 <div className='mt-4'>
                     {cartItems.length === 0 ? (
@@ -90,7 +89,7 @@ const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
                 onRequestClose={toggleCheckoutModal}
                 cartItems={cartItems}
                 totalPrice={totalPrice}
-								handleConfirmPayment={handleConfirmPayment}
+                handleConfirmPayment={handleConfirmPayment}
             />
         </div>
     );

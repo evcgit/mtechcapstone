@@ -57,9 +57,8 @@ code {
   opacity: 1; /* Show scrollbar thumb while scrolling */
 }
 
-
-
-
-body {
-	overflow: hidden;
+@media (min-width: 768px) {
+	body {
+			overflow: hidden;
+	}
 }

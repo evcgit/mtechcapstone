@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from '../../components/Header';
 import RegisterCard from '../../components/RegisterCard';
-import ShoppingCart from '../../components/ShoppingCard';
+import ShoppingCart from '../../components/ShoppingCard'; // Corrected component import
 import backgroundImage from '../../assets/registerbg.webp';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -11,29 +11,28 @@ const Register = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const fetchCourses = async () => {
+        try {
+            const response = await fetch('/courses', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setTimeout(() => {
+                    setCourses(data);
+                    setLoading(false);
+                }, 700);
+            } else {
+                console.error('Failed to fetch courses');
+            }
+        } catch (error) {
+            console.error('Error fetching courses:', error);
+        }
+    };
 
-		const fetchCourses = async () => {
-			try {
-					const response = await fetch('/courses', {
-							headers: {
-								'Content-Type': 'application/json',
-								'authorization': `Bearer ${localStorage.getItem('token')}`
-							}
-			});
-					if (response.ok) {
-							const data = await response.json();
-							setTimeout(() => {
-									setCourses(data);
-									setLoading(false);
-							}, 700);
-					} else {
-							console.error('Failed to fetch courses');
-					}
-			} catch (error) {
-					console.error('Error fetching courses:', error);
-			}
-	};
-	
     useEffect(() => {
         fetchCourses();
     }, []);
@@ -54,30 +53,30 @@ const Register = () => {
         }
     };
 
-		const handleConfirmPayment = async (e) => {
-			e.preventDefault();
-			try {
-				const response = await fetch ('/courses/registered', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${localStorage.getItem('token')}`
-					},
-					body: JSON.stringify({cartItems}),
-				});
-				const data = await response.json();
+    const handleConfirmPayment = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('/courses/registered', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ cartItems }),
+            });
+            const data = await response.json();
 
-				if (data.errorMessage) {
-					alert(data.errorMessage);
-				} else {
-					setCartItems([]);
-					fetchCourses();
-				}
-			} catch (error) {
-				console.error('Error:', error);
-				alert('An error occurred. Please try again.');
-			}
-		};
+            if (data.errorMessage) {
+                alert(data.errorMessage);
+            } else {
+                setCartItems([]);
+                fetchCourses();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        }
+    };
 
     return (
         <div className='min-h-screen w-screen flex flex-col bg-cover'
@@ -88,35 +87,43 @@ const Register = () => {
             ) : (
                 <>
                     <Header />
-                    <div className='flex flex-grow p-20'>
-                        <div className="custom-scrollbar w-2/3 ml-10 overflow-y-auto p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md" style={{ maxHeight: '75vh', minHeight: '75vh' }}>
-                            <div className="flex flex-col space-y-8 p-1">
-                                {courses.map(course => (
-                                    <RegisterCard
-                                        key={course.string_id}
-                                        title={course.title}
-                                        description={course.description}
-                                        string_id={course.string_id}
-                                        schedule={course.schedule}
-                                        classroom_number={course.classroom_number}
-                                        spots_left={course.maximum_capacity}
-                                        credits={course.credit_hours}
-                                        cost={`$${course.tuition_cost}`}
-                                        isOpen={openCards.includes(course.string_id)}
-                                        toggleCard={() => toggleCard(course.string_id)}
-                                        addToCart={() => addToCart({
-                                            title: course.title,
-                                            string_id: course.string_id,
-                                            cost: `$${course.tuition_cost}`
-                                        })}
-                                    />
-                                ))}
-                            </div>
-                        </div>
+                    <div className='flex flex-col lg:flex-row p-4 lg:p-20'>
+										<div className="w-full lg:w-2/3 flex flex-col">
+									    <div className="relative">
+									        <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-3xl shadow-md z-0" style={{ maxHeight: '75vh', overflow: 'hidden' }}></div>
+									        <div className="relative z-10 custom-scrollbar overflow-y-auto rounded-3xl" style={{ maxHeight: '75vh' }}>
+									            <div className="flex flex-col space-y-6 p-4 lg:p-6">
+									                {courses.map(course => (
+									                    <RegisterCard
+									                        key={course.string_id}
+									                        title={course.title}
+									                        description={course.description}
+									                        string_id={course.string_id}
+									                        schedule={course.schedule}
+									                        classroom_number={course.classroom_number}
+									                        spots_left={course.maximum_capacity}
+									                        credits={course.credit_hours}
+									                        cost={`$${course.tuition_cost}`}
+									                        isOpen={openCards.includes(course.string_id)}
+									                        toggleCard={() => toggleCard(course.string_id)}
+									                        addToCart={() => addToCart({
+									                            title: course.title,
+									                            string_id: course.string_id,
+									                            cost: `$${course.tuition_cost}`
+									                        })}
+									                    />
+										                ))}
+										            </div>
+										        </div>
+										    </div>
+										</div>
 
-                        <div className="w-2/4 ml-20 flex justify-end">
-                            <div className="w-2/3">
-                                <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} handleConfirmPayment={handleConfirmPayment} />
+
+                        <div className="w-full lg:w-1/3 lg:mt-0 mt-4 lg:ml-8 flex justify-center lg:justify-end">
+                            <div className="w-full max-w-md">
+                                <div className="overflow-y-auto" style={{ maxHeight: '75vh' }}>
+                                    <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} handleConfirmPayment={handleConfirmPayment} />
+                                </div>
                             </div>
                         </div>
                     </div>
