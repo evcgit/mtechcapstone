@@ -48,6 +48,30 @@ const Register = () => {
         }
     };
 
+		const handleConfirmPayment = async (e) => {
+			e.preventDefault();
+			try {
+				const response = await fetch ('/courses/registered', {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
+					},
+					body: JSON.stringify({cartItems}),
+				});
+				const data = await response.json();
+
+				if (data.errorMessage) {
+					alert(data.errorMessage);
+				} else {
+					setCartItems([]);
+				}
+			} catch (error) {
+				console.error('Error:', error);
+				alert('An error occurred. Please try again.');
+			}
+		};
+
     return (
         <div className='min-h-screen w-screen flex flex-col bg-cover'
             style={{ backgroundImage: `url(${backgroundImage})` }}
@@ -85,7 +109,7 @@ const Register = () => {
 
                         <div className="w-2/4 ml-20 flex justify-end">
                             <div className="w-2/3">
-                                <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} />
+                                <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} handleConfirmPayment={handleConfirmPayment} />
                             </div>
                         </div>
                     </div>

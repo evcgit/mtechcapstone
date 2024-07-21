@@ -3,7 +3,7 @@ import ConfirmationModal from './ConfirmationModal';
 import CheckoutModal from './CheckoutModal';
 import trashcangif from '../assets/icons8-trash.svg';
 
-const ShoppingCart = ({ cartItems, setCartItems }) => {
+const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [itemToRemove, setItemToRemove] = useState(null);
     const [showCheckout, setShowCheckout] = useState(false);
@@ -34,37 +34,11 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
 		const toggleCheckoutModal = () => {
 			setShowCheckout(prevState => !prevState);
 		};
-	
-
-		const handleConfirmPayment = async (e) => {
-			e.preventDefault();
-			try {
-				const response = await fetch ('/courses/registered', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${localStorage.getItem('token')}`
-					},
-					body: JSON.stringify({cartItems}),
-				});
-				const data = await response.json();
-
-				if (data.errorMessage) {
-					alert(data.errorMessage);
-				} else {
-					toggleCheckoutModal();
-					setCartItems([]);
-				}
-			} catch (error) {
-				console.error('Error:', error);
-				alert('An error occurred. Please try again.');
-			}
-		};
 
     return (
         <div className='bg-slate-100 rounded p-4 flex flex-col p-10'>
             <h2 className='text-xl font-semibold'>Selected Classes</h2>
-            <div className='flex-grow mt-2 overflow-y-auto max-h-full' style={{
+            <div className='flex-grow mt-2 overflow-y-auto' style={{
                 minHeight: '60vh',
                 maxHeight: '60vh'
             }}>
@@ -72,9 +46,7 @@ const ShoppingCart = ({ cartItems, setCartItems }) => {
                     {cartItems.length === 0 ? (
                         <p className='text-2xl'>No Classes Selected</p>
                     ) : (
-                        <ul className="min-h-screen overflow-y-auto" style={{
-                            minHeight: '60vh'
-                        }}>
+                        <ul>
                             {cartItems.map(item => (
                                 <li key={item.string_id} className='flex justify-between items-center mb-2'>
                                     <div className='relative group'>

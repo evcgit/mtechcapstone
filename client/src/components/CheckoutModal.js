@@ -26,6 +26,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
     };
 
 		const handleConfirmPaymentClose = (e) => {
+			e.preventDefault();
 			handleConfirmPayment(e);
 			onRequestClose();
 			setIsPaymentView(false);

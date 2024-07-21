@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             console.log('login failed');
             return res.status(401).json({ errorMessage: 'Invalid username or password' });
         }
-        const token = jwt.sign({ sub: user.id, username: user.username, isAdmin: user.user_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
 
 
         console.log('login successful, token generated');
@@ -134,6 +134,26 @@ app.get('/courses', async (req, res) => {
         console.error('Error fetching courses:', error);
         res.status(500).json({ error: 'Failed to fetch courses' });
     }
+});
+
+app.put('/courses/registered', async (req, res) => {
+		const token = req.headers['authorization'].split(' ')[1];
+		const { cartItems } = req.body;
+		try {
+				const decoded = jwt.verify(token, JWT_SECRET);
+				console.log('decoded:', decoded);
+				const client = await pool.connect();
+				for (const item of cartItems) {
+					await client.query('INSERT INTO register (user_id, string_id) VALUES ($1, $2)', [decoded.sub, item.string_id]);
+					console.log(`${decoded.username} registered for course ${item.string_id} `);
+				}
+				client.release();
+
+				res.status(200).json({ message: 'Courses registered successfully' });
+		} catch (error) {
+				console.error('Error registering courses:', error);
+				res.status(500).json({ errorMessage: 'Failed to register courses' });
+		}
 });
 
 
