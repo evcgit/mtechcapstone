@@ -4,7 +4,7 @@ import { ReactComponent as DownArrow } from '../assets/chevron-down-solid.svg';
 
 const RegisterCard = ({ title, isOpen, toggleCard, description, string_id, credits, cost, schedule, classroom_number, spots_left, addToCart }) => {
     return (
-        <div className='bg-slate-100 rounded p-4 mb-4'>
+        <div className='bg-slate-100 rounded p-4'>
             <div className='flex justify-between items-center cursor-pointer' onClick={toggleCard}>
                 <h2 className='text-xl font-semibold'>
                     {title}
