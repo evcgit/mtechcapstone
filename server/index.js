@@ -124,16 +124,17 @@ app.put('/user/profile', async (req, res) => {
 
 
 app.get('/courses', async (req, res) => {
-    try {
-        const client = await pool.connect();
-        const result = await client.query('SELECT * FROM courses');
-        client.release();
-
-        res.status(200).json(result.rows);
-    } catch (error) {
-        console.error('Error fetching courses:', error);
-        res.status(500).json({ error: 'Failed to fetch courses' });
-    }
+  const token = req.headers['authorization'].split(' ')[1];  
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+    const client = await pool.connect();
+    const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
+    client.release();
+    res.status(200).json(result.rows);
+  } catch (error) {
+    console.error('Error fetching courses:', error);
+    res.status(500).json({ error: 'Failed to fetch courses' });
+  }
 });
 
 app.put('/courses/registered', async (req, res) => {

@@ -11,24 +11,30 @@ const Register = () => {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const response = await fetch('/courses');
-                if (response.ok) {
-                    const data = await response.json();
-                    setTimeout(() => {
-                        setCourses(data);
-                        setLoading(false);
-                    }, 700);
-                } else {
-                    console.error('Failed to fetch courses');
-                }
-            } catch (error) {
-                console.error('Error fetching courses:', error);
-            }
-        };
 
+		const fetchCourses = async () => {
+			try {
+					const response = await fetch('/courses', {
+							headers: {
+								'Content-Type': 'application/json',
+								'authorization': `Bearer ${localStorage.getItem('token')}`
+							}
+			});
+					if (response.ok) {
+							const data = await response.json();
+							setTimeout(() => {
+									setCourses(data);
+									setLoading(false);
+							}, 700);
+					} else {
+							console.error('Failed to fetch courses');
+					}
+			} catch (error) {
+					console.error('Error fetching courses:', error);
+			}
+	};
+	
+    useEffect(() => {
         fetchCourses();
     }, []);
 
@@ -65,6 +71,7 @@ const Register = () => {
 					alert(data.errorMessage);
 				} else {
 					setCartItems([]);
+					fetchCourses();
 				}
 			} catch (error) {
 				console.error('Error:', error);
