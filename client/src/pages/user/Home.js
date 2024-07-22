@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../components/Header';
+import Header from '../../components/user/Header';
 import { useAuth } from '../../auth/auth';
-import Card from '../../components/Card';
-import Calendar from '../../components/Calender';
+import Calendar from '../../components/user/Calender';
 import backgroundImage from '../../assets/homebg.webp';
 import LoadingSpinner  from '../../components/LoadingSpinner';
 import { useSnackbar } from 'notistack';
@@ -43,15 +42,6 @@ const Home = () => {
 		fetchProfileInfo();
 	}, [enqueueSnackbar]);
 
-
-  const [springOpen, setSpringOpen] = useState(false);
-  const [summerOpen, setSummerOpen] = useState(false);
-  const [fallOpen, setFallOpen] = useState(false);
-
-  const toggleSpring = () => setSpringOpen(!springOpen);
-  const toggleSummer = () => setSummerOpen(!summerOpen);
-  const toggleFall = () => setFallOpen(!fallOpen);
-
   return (
     <div className='h-screen flex flex-col bg-cover bg-center' 
          style={{ backgroundImage: `url(${backgroundImage})` }}>
@@ -74,23 +64,6 @@ const Home = () => {
           </div>
           
           <div className='p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md flex flex-col'>
-            <div className='flex flex-col flex-grow space-y-4'>
-              <Card
-                title='Spring'
-                isOpen={springOpen}
-                toggleCard={toggleSpring}
-              />
-              <Card
-                title='Summer'
-                isOpen={summerOpen}
-                toggleCard={toggleSummer}
-              />
-              <Card
-                title='Fall'
-                isOpen={fallOpen}
-                toggleCard={toggleFall}
-              />
-            </div>
           </div>
         </div>
       </div>

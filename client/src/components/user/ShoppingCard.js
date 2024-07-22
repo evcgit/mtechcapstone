@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ConfirmationModal from './ConfirmationModal'; 
 import CheckoutModal from './CheckoutModal';
-import trashcangif from '../assets/icons8-trash.svg';
+import trashcangif from '../../assets/icons8-trash.svg';
 
 const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
     const [showConfirmation, setShowConfirmation] = useState(false);

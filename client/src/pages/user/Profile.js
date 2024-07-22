@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../components/Header';
+import Header from '../../components/user/Header';
 import { useAuth } from '../../auth/auth';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import backgroundImage from '../../assets/profilebg.webp';

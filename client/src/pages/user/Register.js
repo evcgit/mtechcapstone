@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Header from '../../components/Header';
-import RegisterCard from '../../components/RegisterCard';
-import ShoppingCart from '../../components/ShoppingCard'; 
+import Header from '../../components/user/Header';
+import RegisterCard from '../../components/user/RegisterCard';
+import ShoppingCart from '../../components/user/ShoppingCard'; 
 import backgroundImage from '../../assets/registerbg.webp';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useSnackbar } from 'notistack';
@@ -69,7 +69,7 @@ const Register = () => {
             const data = await response.json();
 
             if (data.errorMessage) {
-							enqueueSnackbar('Failed to register for course', { variant: 'error' });
+							enqueueSnackbar(data.errorMessage, { variant: 'error' });
             } else {
                 setCartItems([]);
                 fetchCourses();
