@@ -3,6 +3,7 @@ import Header from '../../components/Header';
 import { useAuth } from '../../auth/auth';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import backgroundImage from '../../assets/profilebg.webp';
+import { useSnackbar } from 'notistack';
 
 const Profile = () => {
     useAuth();
@@ -16,6 +17,7 @@ const Profile = () => {
     const [updatedLastName, setUpdatedLastName] = useState('');
     const [updatedEmail, setUpdatedEmail] = useState('');
     const [updatedPhone, setUpdatedPhone] = useState('');
+		const { enqueueSnackbar } = useSnackbar();
 
     const handleSave = () => {
         const updatedData = {
@@ -36,18 +38,19 @@ const Profile = () => {
         .then((res) => res.json())
         .then((data) => {
             if (data.error) {
-                alert(data.error);
+							enqueueSnackbar(data.error, { variant: 'error' });
             } else {
-                setFirstName(data.first_name);
-                setLastName(data.last_name);
-                setEmail(data.user_email);
-                setPhone(data.user_phone);
+                setFirstName(data.firstName);
+                setLastName(data.lastName);
+                setEmail(data.email);
+                setPhone(data.phone);
                 setEditMode(false);
+								enqueueSnackbar('Profile updated successfully', { variant: 'success' });
             }
         })
         .catch((error) => {
             console.error('Error:', error);
-            alert('Failed to update profile');
+            enqueueSnackbar('Failed to update profile', { variant: 'error' });
         });
     };
 
@@ -63,7 +66,7 @@ const Profile = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data.error) {
-                    alert(data.error);
+                    console.log(data.error);
                 } else {
                     setFirstName(data.first_name);
                     setLastName(data.last_name);
