@@ -137,6 +137,7 @@ app.get('/courses', async (req, res) => {
   }
 });
 
+
 app.put('/courses/registered', async (req, res) => {
 		const token = req.headers['authorization'].split(' ')[1];
 		const { cartItems } = req.body;
@@ -155,6 +156,28 @@ app.put('/courses/registered', async (req, res) => {
 				console.error('Error registering courses:', error);
 				res.status(500).json({ errorMessage: 'Failed to register courses' });
 		}
+});
+
+app.get('/courses/schedule', async (req, res) => {
+    const token = req.headers['authorization']?.split(' ')[1];
+
+    if (!token) {
+        return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const client = await pool.connect();
+        const result = await client.query(
+            'SELECT string_id, title, schedule FROM courses WHERE string_id IN (SELECT string_id FROM register WHERE user_id = $1)',
+            [decoded.sub]
+        ); 
+        client.release();
+      res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Error fetching schedule:', error);
+        res.status(500).json({ error: 'Failed to fetch schedule' });
+  }
 });
 
 
