@@ -5,10 +5,12 @@ import Card from '../../components/Card';
 import Calendar from '../../components/Calender';
 import backgroundImage from '../../assets/homebg.webp';
 import LoadingSpinner  from '../../components/LoadingSpinner';
+import { useSnackbar } from 'notistack';
 
 
 const Home = () => {
   useAuth();
+  const { enqueueSnackbar } = useSnackbar();
 
 	const [firstName, setFirstName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -25,7 +27,7 @@ const Home = () => {
 			.then((res) => res.json())
 			.then((data) => {
 				if (data.error) {
-					alert(data.error);
+					enqueueSnackbar(data.error, { variant: 'error' });
 				} else {
           setTimeout(() => {
             setFirstName(data.first_name);
@@ -35,10 +37,11 @@ const Home = () => {
 			})
 			.catch((error) => {
 				console.error('Error:', error);
+        enqueueSnackbar('Error', error, { variant: 'error' });
 			});
 		};
 		fetchProfileInfo();
-	}, []);
+	}, [enqueueSnackbar]);
 
 
   const [springOpen, setSpringOpen] = useState(false);

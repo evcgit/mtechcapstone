@@ -105,14 +105,14 @@ app.get('/user/profile', async (req, res) => {
 
 
 app.put('/user/profile', async (req, res) => {
-  const { updatedData } = req.body;
+  const { firstName, lastName, email, phone } = req.body;
   const token = req.headers['authorization'].split(' ')[1];
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [updatedData.firstName, updatedData.lastName, updatedData.email, updatedData.phone, decoded.username]);
+    await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [firstName, lastName, email, phone, decoded.username]);
     client.release();
-
+    const updatedData = {firstName, lastName, email, phone};
     res.status(200).json(updatedData);
     console.log('User profile updated successfully:', updatedData);
   } catch (error) {

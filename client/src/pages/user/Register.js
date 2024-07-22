@@ -51,7 +51,7 @@ const Register = () => {
         if (!cartItems.some(item => item.string_id === course.string_id)) {
             setCartItems([...cartItems, course]);
         } else {
-            alert('Course is already selected');
+          enqueueSnackbar('Course is already selected', { variant: 'error' });
         }
     };
 

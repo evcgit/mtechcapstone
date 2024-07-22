@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { useSnackbar } from 'notistack';
 
 const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleConfirmPayment }) => {
     const [isPaymentView, setIsPaymentView] = useState(false);
@@ -7,6 +8,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
     const [discountApplied, setDiscountApplied] = useState(false);
     const [discountedPrice, setDiscountedPrice] = useState(totalPrice);
     const [showCourses, setShowCourses] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     const handleProceedToPayment = () => {
         setIsPaymentView(true);
@@ -21,7 +23,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
             setDiscountApplied(true);
             setDiscountedPrice(0); // Apply discount to set price to 0
         } else {
-            alert('Invalid discount code');
+          enqueueSnackbar('Invalid discount code', { variant: 'error' });
         }
     };
 
