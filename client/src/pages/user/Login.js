@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../../assets/university.jpg';
 import LoadingSpinner  from '../../components/LoadingSpinner';
+import { useSnackbar } from 'notistack';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+	const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
 
 	useEffect(() => {
@@ -34,7 +36,7 @@ function Login() {
       const data = await response.json();
 
       if (data.errorMessage) {
-        alert(data.errorMessage);
+        enqueueSnackbar(data.errorMessage, { variant: 'error' });
         setLoading(false); 
       } else {
         localStorage.setItem('token', data.token);

@@ -1,15 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import backgroundImage from "../../assets/registeruni.jpg";
+import { useSnackbar } from 'notistack';
 
 const CreateAccount = () => {
-  const [newUser, setNewUser] = React.useState('');
-  const [newPassword, setNewPassword] = React.useState('');
-  const [confirmPassword, setConfirmPassword] = React.useState('');
-
-  const [email, setEmail] = React.useState('');
-  const [firstName, setFirstName] = React.useState('');
-  const [lastName, setLastName] = React.useState('');
-  const [phone, setPhone] = React.useState('');
+  const [newUser, setNewUser] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phone, setPhone] = useState('');
+	const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = (e) => {
 		e.preventDefault();
@@ -36,7 +37,7 @@ const CreateAccount = () => {
 			.then((data) => {
 				console.log(data);
 				if (data.errorMessage) {
-					alert(data.errorMessage);
+					enqueueSnackbar(data.errorMessage, { variant: 'error' });
 				}
 				else {
           setNewUser('');
@@ -46,10 +47,12 @@ const CreateAccount = () => {
           setFirstName('');
           setLastName('');
           setPhone('');
+					enqueueSnackbar('Account created', { variant: 'success' });
 				}
 			})
 			.catch((error) => {
 				console.error('Error:', error);
+				enqueueSnackbar('Internal server error', { variant: 'error' });
 			});
 	};
 

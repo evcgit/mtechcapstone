@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import Header from '../../components/Header';
 import RegisterCard from '../../components/RegisterCard';
-import ShoppingCart from '../../components/ShoppingCard'; // Corrected component import
+import ShoppingCart from '../../components/ShoppingCard'; 
 import backgroundImage from '../../assets/registerbg.webp';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import { useSnackbar } from 'notistack';
 
 const Register = () => {
     const [openCards, setOpenCards] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
+		const { enqueueSnackbar } = useSnackbar();
 
     const fetchCourses = async () => {
         try {
@@ -67,14 +69,15 @@ const Register = () => {
             const data = await response.json();
 
             if (data.errorMessage) {
-                alert(data.errorMessage);
+							enqueueSnackbar('Failed to register for course', { variant: 'error' });
             } else {
                 setCartItems([]);
                 fetchCourses();
+								enqueueSnackbar('Registration successful', { variant: 'success' });
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('An error occurred. Please try again.');
+            enqueueSnackbar('Failed to register for course', { variant: 'error' });
         }
     };
 
