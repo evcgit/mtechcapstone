@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useSnackbar } from 'notistack';
 
-// Check if a time slot falls within a time range
 const isWithinRange = (timeSlot, startTime, endTime) => {
-    const slotTime = parseInt(timeSlot.split(':')[0]);
-    const [slotPeriod] = timeSlot.split(' ').slice(-1);
-    
-    const [startHour, startPeriod] = startTime.split(' ');
-    const [endHour, endPeriod] = endTime.split(' ');
-    
-    const startTimeSlot = startPeriod === 'PM' && startHour !== '12' ? parseInt(startHour) + 12 : parseInt(startHour);
-    const endTimeSlot = endPeriod === 'PM' && endHour !== '12' ? parseInt(endHour) + 12 : parseInt(endHour);
+    const [slotHour, slotPeriod] = timeSlot.split(' ');
+    const slotHour24 = slotPeriod === 'PM' && parseInt(slotHour) !== 12 ? parseInt(slotHour) + 12 : parseInt(slotHour);
 
-    const slotTime24 = slotPeriod === 'PM' && slotTime !== 12 ? slotTime + 12 : slotTime;
-    return slotTime24 >= startTimeSlot && slotTime24 < endTimeSlot;
+    const [startHour, startPeriod] = startTime.split(' ');
+    const startHour24 = startPeriod === 'PM' && parseInt(startHour) !== 12 ? parseInt(startHour) + 12 : parseInt(startHour);
+
+    const [endHour, endPeriod] = endTime.split(' ');
+    const endHour24 = endPeriod === 'PM' && parseInt(endHour) !== 12 ? parseInt(endHour) + 12 : parseInt(endHour);
+
+    return slotHour24 >= startHour24 && slotHour24 < endHour24;
 };
 
 const Calendar = () => {
@@ -21,8 +19,8 @@ const Calendar = () => {
     const [events, setEvents] = useState([]);
 
     const getTodayAbbreviation = () => {
-        const today = new Date().getDay(); // 0 (Sunday) to 6 (Saturday)
-        const abbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S']; // Sunday to Saturday
+        const today = new Date().getDay();
+        const abbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S'];
         return abbreviations[today];
     };
 
@@ -57,10 +55,9 @@ const Calendar = () => {
         });
     }, [enqueueSnackbar, todayAbbreviation]);
 
-    // Generate time slots for 8 AM to 5 PM
     const getTimeSlots = () => {
         const hours = [];
-        for (let i = 8; i <= 17; i++) { // Loop from 8 AM to 5 PM
+        for (let i = 8; i <= 17; i++) {
             const hour = i === 12 ? `12:00 PM` : (i < 12 ? `${i}:00 AM` : `${i - 12}:00 PM`);
             hours.push(hour);
         }
@@ -69,19 +66,21 @@ const Calendar = () => {
 
     const timeSlots = getTimeSlots();
 
-    // Create a mapping of time slots to events
     const timeSlotEvents = timeSlots.reduce((acc, slot) => {
         acc[slot] = [];
         return acc;
     }, {});
 
-    // Populate the time slot events
     events.forEach(event => {
         if (typeof event.schedule === 'string') {
             const parts = event.schedule.split(' ');
             if (parts.length === 2) {
                 const [days, timeRange] = parts;
-                const [startTime, endTime] = timeRange.split('-').map(time => `${time}:00 ${time.includes('AM') || time.includes('PM') ? '' : 'AM'}`);
+                const [startTime, endTime] = timeRange.split('-').map(time => {
+                    const hour = parseInt(time);
+                    const period = hour >= 8 && hour < 12 ? 'AM' : 'PM';
+                    return `${hour % 12 === 0 ? 12 : hour % 12} ${period}`;
+                });
                 if (days.includes(todayAbbreviation)) {
                     timeSlots.forEach(slot => {
                         if (isWithinRange(slot, startTime, endTime)) {
