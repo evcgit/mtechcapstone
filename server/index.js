@@ -133,7 +133,7 @@ app.get('/courses', async (req, res) => {
       client.release();
       res.status(200).json(result.rows);
     } else {
-      const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
+      const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1) ORDER BY string_id', [decoded.sub]);
       client.release();
       res.status(200).json(result.rows);
     }
