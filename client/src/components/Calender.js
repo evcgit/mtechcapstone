@@ -27,15 +27,6 @@ const Calendar = () => {
     const todayAbbreviation = getTodayAbbreviation();
 
     const parseDays = (days) => {
-        const dayMap = {
-            'M': 'Monday',
-            'T': 'Tuesday',
-            'W': 'Wednesday',
-            'TH': 'Thursday',
-            'F': 'Friday',
-            'S': 'Saturday',
-            'U': 'Sunday'
-        };
         
         const parsedDays = [];
         for (let i = 0; i < days.length; i++) {
