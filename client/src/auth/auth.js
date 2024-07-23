@@ -1,9 +1,11 @@
 import { jwtDecode } from 'jwt-decode';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 
 export const useAuth = () => {
   const navigate = useNavigate();
+	const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -14,7 +16,7 @@ export const useAuth = () => {
         const decodedToken = jwtDecode(token);
         const currentTime = Date.now() / 1000;
         if (decodedToken.exp < currentTime) {
-          alert('Session expired. Please log in again.');
+          enqueueSnackbar('Session timed out. Please login again', { variant: 'error' });
           localStorage.removeItem('token');
           navigate('/');
         }
@@ -24,11 +26,12 @@ export const useAuth = () => {
         navigate('/');
       }
     }
-  }, [navigate]); 
+  }, [navigate, enqueueSnackbar]); 
 };
 
 export const useAdminAuth = () => {
 	const navigate = useNavigate();
+	const { enqueueSnackbar } = useSnackbar();
 	const token = localStorage.getItem('token');
 	if (!token) {
 		navigate('/');
@@ -40,7 +43,7 @@ export const useAdminAuth = () => {
 			}
 			const currentTime = Date.now() / 1000;
 			if (decodedToken.exp < currentTime) {
-				alert('Session expired. Please log in again.');
+				enqueueSnackbar('Session timed out. Please login again', { variant: 'error' });
 				localStorage.removeItem('token');
 				navigate('/');
 			}
