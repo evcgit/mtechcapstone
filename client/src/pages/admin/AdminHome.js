@@ -4,6 +4,7 @@ import { useAdminAuth } from '../../auth/auth';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import AdminCourses from '../../components/admin/AdminCourses'; 
 import backgroundImage from '../../assets/homebg.webp'; 
+import NewCourse from '../../components/admin/NewCourse';
 
 const AdminHome = () => {
     useAdminAuth();
@@ -54,7 +55,7 @@ const AdminHome = () => {
             {loading ? (
                 <LoadingSpinner />
             ) : (
-                <div className='flex flex-col lg:flex-row p-4 lg:p-20'>
+                <div className='flex flex-col lg:flex-row lg:justify-between p-4 lg:p-20'>
                     <div className="w-full lg:w-2/3 flex flex-col">
                         <div className="relative">
                             <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-3xl shadow-md z-0" style={{ maxHeight: '75vh', overflow: 'hidden' }}></div>
@@ -79,6 +80,7 @@ const AdminHome = () => {
                             </div>
                         </div>
                     </div>
+                    <NewCourse />
                 </div>
             )}
         </div>

@@ -143,6 +143,25 @@ app.get('/courses', async (req, res) => {
   }
 });
 
+app.post('/courses', async (req, res) => {
+  const { title, stringId, description, schedule, classroomNumber, maxCapacity, credits, cost } = req.body;
+  const token = req.headers['authorization'].split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ errorMessage: 'Unauthorized' });
+    }
+    const client = await pool.connect();
+    await client.query('INSERT INTO courses (title, string_id, description, schedule, classroom_number, maximum_capacity, credit_hours, tuition_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [title, stringId, description, schedule, classroomNumber, maxCapacity, credits, cost]);
+    client.release();
+    console.log('Course created:', { title, description, schedule, classroomNumber, maxCapacity, credits, cost });
+    res.status(201).json({ message: 'Course created' });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ errorMessage: 'Failed to create course' });
+  }
+});
+
 
 app.put('/courses/registered', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];
