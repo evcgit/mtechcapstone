@@ -4,6 +4,7 @@ import { useAuth } from '../../auth/auth';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import backgroundImage from '../../assets/profilebg.webp';
 import { useSnackbar } from 'notistack';
+import AdminHeader from '../../components/admin/AdminHeader';
 
 const Profile = () => {
     useAuth();
@@ -17,6 +18,7 @@ const Profile = () => {
     const [updatedLastName, setUpdatedLastName] = useState('');
     const [updatedEmail, setUpdatedEmail] = useState('');
     const [updatedPhone, setUpdatedPhone] = useState('');
+		const [isAdmin, setIsAdmin] = useState(false);
 		const { enqueueSnackbar } = useSnackbar();
 
     const handleSave = () => {
@@ -72,6 +74,7 @@ const Profile = () => {
                     setLastName(data.last_name);
                     setEmail(data.user_email);
                     setPhone(data.user_phone);
+										setIsAdmin(data.user_admin);
                     setTimeout(() => {
                       setLoading(false); 
                     }, 700); 
@@ -87,11 +90,11 @@ const Profile = () => {
     return (
       <div className='h-screen flex flex-col bg-cover' 
       style={{ backgroundImage: `url(${backgroundImage})` }}>
+				{isAdmin ? ( <Header /> ) : ( <AdminHeader /> )}
             {loading ? (
                 <LoadingSpinner />
             ) : (
                 <>
-                    <Header />
                     <div className='flex justify-center items-center mt-10 h-full'>
                         <div className='w-11/12 md:w-2/3 lg:w-1/2 xl:w-1/3 bg-white rounded-lg shadow-lg p-8'>
                             <h1 className='text-3xl font-bold text-gray-800 mb-6 text-center'>Profile</h1>

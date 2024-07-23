@@ -129,7 +129,7 @@ app.get('/courses', async (req, res) => {
 		const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
     if (decoded.isAdmin) {
-      const result = await client.query('SELECT * FROM courses');
+      const result = await client.query('SELECT * FROM courses ORDER BY string_id');
       client.release();
       res.status(200).json(result.rows);
     } else {
@@ -185,6 +185,25 @@ app.put('/courses/registered', async (req, res) => {
       console.error('Error registering courses:', error);
       res.status(500).json({ errorMessage: 'Failed to register courses' });
   }
+});
+
+
+app.get('/students', async (req, res) => {
+		const token = req.headers['authorization'].split(' ')[1];
+		try {
+				const decoded = jwt.verify(token, JWT_SECRET);
+				if (!decoded.isAdmin) {
+						return res.status(403).json({ errorMessage: 'Unauthorized' });
+				}
+				const client = await pool.connect();
+				const result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
+				client.release();
+				console.log('students:', result.rows);
+				res.status(200).json(result.rows);
+		} catch (error) {
+				console.error('Error fetching students:', error);
+				res.status(500).json({ errorMessage: 'Failed to fetch students' });
+		}
 });
 
 
