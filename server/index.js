@@ -128,9 +128,15 @@ app.get('/courses', async (req, res) => {
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
-    client.release();
-    res.status(200).json(result.rows);
+    if (decoded.isAdmin) {
+      const result = await client.query('SELECT * FROM courses');
+      client.release();
+      res.status(200).json(result.rows);
+    } else {
+      const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
+      client.release();
+      res.status(200).json(result.rows);
+    }
   } catch (error) {
     console.error('Error fetching courses:', error);
     res.status(500).json({ error: 'Failed to fetch courses' });
@@ -138,24 +144,49 @@ app.get('/courses', async (req, res) => {
 });
 
 app.put('/courses/registered', async (req, res) => {
-		const token = req.headers['authorization'].split(' ')[1];
-		const { cartItems } = req.body;
-		try {
-				const decoded = jwt.verify(token, JWT_SECRET);
-				console.log('decoded:', decoded);
-				const client = await pool.connect();
-				for (const item of cartItems) {
-					await client.query('INSERT INTO register (user_id, string_id) VALUES ($1, $2)', [decoded.sub, item.string_id]);
-					console.log(`${decoded.username} registered for course ${item.string_id} `);
-				}
-				client.release();
+  const token = req.headers['authorization'].split(' ')[1];
+  const { cartItems } = req.body;
+  try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      console.log('decoded:', decoded);
+      const client = await pool.connect();
+      try {
+          await client.query('BEGIN');
+          for (const item of cartItems) {
+              const { rows } = await client.query(
+                  'SELECT maximum_capacity FROM courses WHERE string_id = $1',
+                  [item.string_id]
+              );
 
-				res.status(200).json({ message: 'Courses registered successfully' });
-		} catch (error) {
-				console.error('Error registering courses:', error);
-				res.status(500).json({ errorMessage: 'Failed to register courses' });
-		}
+              if (rows.length === 0 || rows[0].maximum_capacity <= 0) {
+                  await client.query('ROLLBACK');
+                  return res.status(400).json({ errorMessage: `Course ${item.string_id} is full` });
+              }
+
+              await client.query(
+                  'INSERT INTO register (user_id, string_id) VALUES ($1, $2)',
+                  [decoded.sub, item.string_id]
+              );
+              await client.query(
+                  'UPDATE courses SET maximum_capacity = maximum_capacity - 1 WHERE string_id = $1 AND maximum_capacity > 0',
+                  [item.string_id]
+              );
+              console.log(`${decoded.username} registered for course ${item.string_id}`);
+          }
+          await client.query('COMMIT');
+          res.status(200).json({ message: 'Courses registered successfully' });
+      } catch (error) {
+          await client.query('ROLLBACK');
+          throw error; 
+      } finally {
+          client.release();
+      }
+  } catch (error) {
+      console.error('Error registering courses:', error);
+      res.status(500).json({ errorMessage: 'Failed to register courses' });
+  }
 });
+
 
 
 // Catch-all handler to serve the React app for any unknown routes
