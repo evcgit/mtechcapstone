@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             console.log('login failed');
             return res.status(401).json({ errorMessage: 'Invalid username or password' });
         }
-        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
 
 
         console.log('login successful, token generated');
@@ -47,7 +47,7 @@ app.post('/login', async (req, res) => {
         return res.status(500).json({ errorMessage: 'Internal server error' });
     } finally {
         if (client) {
-            client.release();
+            client.release(); 
         }
     }
 });
@@ -70,7 +70,7 @@ app.post('/createAccount', async (req, res) => {
           return res.status(400).json({ errorMessage: 'Username or email already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone, print_password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone, password]);
+        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone, print_password, master_admin) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone, password, false]);
         console.log('account created');
         return res.json({ message: 'Account created' });
     } catch (err) {
@@ -110,13 +110,11 @@ app.put('/user/profile', async (req, res) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    await client.query(
-      'UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5',
-      [firstName, lastName, email, phone, decoded.username]
-    );
+    await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE username = $5', [firstName, lastName, email, phone, decoded.username]);
     client.release();
-    res.status(200).json({ firstName, lastName, email, phone });
-    console.log('User profile updated successfully:', { firstName, lastName, email, phone });
+    const updatedData = {firstName, lastName, email, phone};
+    res.status(200).json(updatedData);
+    console.log('User profile updated successfully:', updatedData);
   } catch (error) {
     console.error('Error updating user profile:', error);
     res.status(500).json({ error: 'Failed to update user profile' });
@@ -130,9 +128,15 @@ app.get('/courses', async (req, res) => {
 	try {
 		const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
-    client.release();
-    res.status(200).json(result.rows);
+    if (decoded.isAdmin) {
+      const result = await client.query('SELECT * FROM courses ORDER BY string_id');
+      client.release();
+      res.status(200).json(result.rows);
+    } else {
+      const result = await client.query('SELECT * FROM courses WHERE string_id NOT IN (SELECT string_id FROM register WHERE user_id = $1)', [decoded.sub]);
+      client.release();
+      res.status(200).json(result.rows);
+    }
   } catch (error) {
     console.error('Error fetching courses:', error);
     res.status(500).json({ error: 'Failed to fetch courses' });
@@ -141,21 +145,70 @@ app.get('/courses', async (req, res) => {
 
 
 app.put('/courses/registered', async (req, res) => {
+  const token = req.headers['authorization'].split(' ')[1];
+  const { cartItems } = req.body;
+  try {
+      const decoded = jwt.verify(token, JWT_SECRET);
+      console.log('decoded:', decoded);
+      const client = await pool.connect();
+      try {
+          await client.query('BEGIN');
+          for (const item of cartItems) {
+              const { rows } = await client.query(
+                  'SELECT maximum_capacity FROM courses WHERE string_id = $1',
+                  [item.string_id]
+              );
+
+              if (rows.length === 0 || rows[0].maximum_capacity <= 0) {
+                  await client.query('ROLLBACK');
+                  return res.status(400).json({ errorMessage: `Course ${item.string_id} is full` });
+              }
+
+              await client.query(
+                  'INSERT INTO register (user_id, string_id) VALUES ($1, $2)',
+                  [decoded.sub, item.string_id]
+              );
+              await client.query(
+                  'UPDATE courses SET maximum_capacity = maximum_capacity - 1 WHERE string_id = $1 AND maximum_capacity > 0',
+                  [item.string_id]
+              );
+              console.log(`${decoded.username} registered for course ${item.string_id}`);
+          }
+          await client.query('COMMIT');
+          res.status(200).json({ message: 'Courses registered successfully' });
+      } catch (error) {
+          await client.query('ROLLBACK');
+          throw error; 
+      } finally {
+          client.release();
+      }
+  } catch (error) {
+      console.error('Error registering courses:', error);
+      res.status(500).json({ errorMessage: 'Failed to register courses' });
+  }
+});
+
+
+app.get('/students', async (req, res) => {
 		const token = req.headers['authorization'].split(' ')[1];
-		const { cartItems } = req.body;
 		try {
 				const decoded = jwt.verify(token, JWT_SECRET);
-				const client = await pool.connect();
-				for (const item of cartItems) {
-					await client.query('INSERT INTO register (user_id, string_id) VALUES ($1, $2)', [decoded.sub, item.string_id]);
-					console.log(`${decoded.username} registered for course ${item.string_id} `);
+				if (!decoded.isAdmin) {
+						return res.status(403).json({ errorMessage: 'Unauthorized' });
 				}
+				const client = await pool.connect();
+        let result;
+        if (decoded.masterAdmin) {
+          result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
+        } else {
+          result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
+        }
 				client.release();
-
-				res.status(200).json({ message: 'Courses registered successfully' });
+				console.log('students:', result.rows);
+				res.status(200).json(result.rows);
 		} catch (error) {
-				console.error('Error registering courses:', error);
-				res.status(500).json({ errorMessage: 'Failed to register courses' });
+				console.error('Error fetching students:', error);
+				res.status(500).json({ errorMessage: 'Failed to fetch students' });
 		}
 });
 
@@ -180,6 +233,7 @@ app.get('/courses/schedule', async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch schedule' });
   }
 });
+
 
 
 // Catch-all handler to serve the React app for any unknown routes

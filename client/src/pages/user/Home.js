@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import Header from '../../components/Header';
+import Header from '../../components/user/Header';
 import { useAuth } from '../../auth/auth';
-import Card from '../../components/Card';
-import Calendar from '../../components/Calender'; // Corrected component import
+import Calendar from '../../components/user/Calender';
 import backgroundImage from '../../assets/homebg.webp';
-import LoadingSpinner from '../../components/LoadingSpinner';
+import LoadingSpinner  from '../../components/LoadingSpinner';
+import { useSnackbar } from 'notistack';
+
+
 
 const Home = () => {
   useAuth();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [firstName, setFirstName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -24,7 +27,7 @@ const Home = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          alert(data.error);
+          enqueueSnackbar(data.error, { variant: 'error' });
         } else {
           setTimeout(() => {
             setFirstName(data.first_name);
@@ -34,18 +37,11 @@ const Home = () => {
       })
       .catch((error) => {
         console.error('Error:', error);
+        enqueueSnackbar('Error', error, { variant: 'error' });
       });
     };
     fetchProfileInfo();
-  }, []);
-
-  const [springOpen, setSpringOpen] = useState(false);
-  const [summerOpen, setSummerOpen] = useState(false);
-  const [fallOpen, setFallOpen] = useState(false);
-
-  const toggleSpring = () => setSpringOpen(!springOpen);
-  const toggleSummer = () => setSummerOpen(!summerOpen);
-  const toggleFall = () => setFallOpen(!fallOpen);
+  }, [enqueueSnackbar]);
 
   const today = new Date();
   const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -67,31 +63,14 @@ const Home = () => {
                 <Calendar />
               </div>
             </div>
-
-            {/* Welcome and Cards Container */}
-            <div className='flex-1 lg:w-3/4 flex flex-col space-y-4'>
+            <div className='flex-1 ml-4 mr-12 mt-4 flex flex-col space-y-4 max-xl:w-11/12 max-xl:ml-4'>
               <div className='bg-white/20 backdrop-blur-md rounded-3xl shadow-md p-6 flex justify-center items-center'>
-                <p className='text-white text-xl lg:text-2xl font-bold'>
+                <p className='text-white text-2xl font-bold'>
                   Welcome {firstName}!
                 </p>
               </div>
-              
-              <div className='bg-white/20 backdrop-blur-md rounded-3xl shadow-md p-6 flex flex-col space-y-4'>
-                <Card
-                  title='Spring'
-                  isOpen={springOpen}
-                  toggleCard={toggleSpring}
-                />
-                <Card
-                  title='Summer'
-                  isOpen={summerOpen}
-                  toggleCard={toggleSummer}
-                />
-                <Card
-                  title='Fall'
-                  isOpen={fallOpen}
-                  toggleCard={toggleFall}
-                />
+              <div className='p-6 bg-white/20 backdrop-blur-md rounded-3xl shadow-md flex flex-col'>
+                {/* Your other components go here */}
               </div>
             </div>
           </div>
@@ -102,3 +81,4 @@ const Home = () => {
 };
 
 export default Home;
+

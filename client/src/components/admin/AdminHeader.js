@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { ReactComponent as LogoutIcon } from "../assets/logout.svg";
-import { ReactComponent as MenuIcon } from "../assets/menu.svg";
+import { ReactComponent as LogoutIcon } from "../../assets/logout.svg";
+import { ReactComponent as MenuIcon } from "../../assets/menu.svg";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
@@ -23,11 +23,11 @@ const Header = () => {
           BBU
         </div>
         <div className="hidden md:flex flex-1 justify-center space-x-12">
-          <a href="/register" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
-            Register
+          <a href="/students" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+            Students
             <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
           </a>
-          <a href="/home" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+          <a href="/admin/home" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
             Home
             <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
           </a>
@@ -51,7 +51,7 @@ const Header = () => {
             Home
           </a>
           <a href="/register" className="relative w-full text-left py-2 text-lg">
-            Register
+            Students
           </a>
           <a href="/profile" className="relative w-full text-left py-2 text-lg">
             Profile

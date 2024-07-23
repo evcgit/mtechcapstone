@@ -1,6 +1,6 @@
 import React from 'react';
-import { ReactComponent as UpArrow } from '../assets/angle-up-solid.svg';
-import { ReactComponent as DownArrow } from '../assets/chevron-down-solid.svg';
+import { ReactComponent as UpArrow } from '../../assets/angle-up-solid.svg';
+import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg';
 
 const RegisterCard = ({ title, isOpen, toggleCard, description, string_id, credits, cost, schedule, classroom_number, spots_left, addToCart }) => {
     return (
