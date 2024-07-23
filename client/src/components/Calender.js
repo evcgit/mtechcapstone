@@ -20,11 +20,39 @@ const Calendar = () => {
 
     const getTodayAbbreviation = () => {
         const today = new Date().getDay();
-        const abbreviations = ['S', 'M', 'T', 'W', 'R', 'F', 'S'];
+        const abbreviations = ['S', 'M', 'T', 'W', 'TH', 'F', 'S'];
         return abbreviations[today];
     };
 
     const todayAbbreviation = getTodayAbbreviation();
+
+    const parseDays = (days) => {
+        const dayMap = {
+            'M': 'Monday',
+            'T': 'Tuesday',
+            'W': 'Wednesday',
+            'TH': 'Thursday',
+            'F': 'Friday',
+            'S': 'Saturday',
+            'U': 'Sunday'
+        };
+        
+        const parsedDays = [];
+        for (let i = 0; i < days.length; i++) {
+            if (days[i] === 'T') {
+                if (days[i + 1] === 'H') {
+                    parsedDays.push('TH');
+                    i++; // Skip the next character
+                } else {
+                    parsedDays.push('T');
+                }
+            } else {
+                parsedDays.push(days[i]);
+            }
+        }
+        
+        return parsedDays;
+    };
 
     useEffect(() => {
         fetch('/courses/schedule', {
@@ -42,7 +70,8 @@ const Calendar = () => {
                 const filteredEvents = data.filter(event => {
                     if (typeof event.schedule === 'string') {
                         const [days] = event.schedule.split(' ');
-                        return days.includes(todayAbbreviation);
+                        const parsedDays = parseDays(days);
+                        return parsedDays.includes(todayAbbreviation);
                     }
                     return false;
                 });
@@ -81,7 +110,7 @@ const Calendar = () => {
                     const period = hour >= 8 && hour < 12 ? 'AM' : 'PM';
                     return `${hour % 12 === 0 ? 12 : hour % 12} ${period}`;
                 });
-                if (days.includes(todayAbbreviation)) {
+                if (parseDays(days).includes(todayAbbreviation)) {
                     timeSlots.forEach(slot => {
                         if (isWithinRange(slot, startTime, endTime)) {
                             timeSlotEvents[slot].push(event);
