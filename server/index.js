@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             console.log('login failed');
             return res.status(401).json({ errorMessage: 'Invalid username or password' });
         }
-        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
 
 
         console.log('login successful, token generated');
@@ -47,7 +47,7 @@ app.post('/login', async (req, res) => {
         return res.status(500).json({ errorMessage: 'Internal server error' });
     } finally {
         if (client) {
-            client.release(); // Release the client back to the pool
+            client.release(); 
         }
     }
 });
@@ -70,7 +70,7 @@ app.post('/createAccount', async (req, res) => {
           return res.status(400).json({ errorMessage: 'Username or email already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
-        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone, print_password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone, password]);
+        await client.query('INSERT INTO users (username, user_password, user_email, first_name, last_name, user_admin, user_phone, print_password, master_admin) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)', [username, hashedPassword, email, firstName, lastName, userAdmin, phone, password, false]);
         console.log('account created');
         return res.json({ message: 'Account created' });
     } catch (err) {
@@ -196,7 +196,12 @@ app.get('/students', async (req, res) => {
 						return res.status(403).json({ errorMessage: 'Unauthorized' });
 				}
 				const client = await pool.connect();
-				const result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
+        let result;
+        if (decoded.masterAdmin) {
+          result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
+        } else {
+          result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
+        }
 				client.release();
 				console.log('students:', result.rows);
 				res.status(200).json(result.rows);

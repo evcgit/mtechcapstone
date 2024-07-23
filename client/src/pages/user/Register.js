@@ -82,55 +82,54 @@ const Register = () => {
     };
 
     return (
-        <div className='min-h-screen w-screen flex flex-col bg-cover'
-            style={{ backgroundImage: `url(${backgroundImage})` }}
-        >
-            {loading ? (
-                <LoadingSpinner />
+      <div className='min-h-screen w-screen flex flex-col bg-cover'
+        style={{ backgroundImage: `url(${backgroundImage})` }}>
+          {loading ? (
+            <LoadingSpinner />
             ) : (
-                <>
-                    <Header />
-                    <div className='flex flex-col lg:flex-row p-4 lg:p-20'>
-										<div className="w-full lg:w-2/3 flex flex-col">
-									    <div className="relative">
-									        <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-3xl shadow-md z-0" style={{ maxHeight: '75vh', overflow: 'hidden' }}></div>
-									        <div className="relative z-10 custom-scrollbar overflow-y-auto rounded-3xl" style={{ maxHeight: '75vh' }}>
-									            <div className="flex flex-col space-y-6 p-4 lg:p-6">
-									                {courses.map(course => (
-									                    <RegisterCard
-									                        key={course.string_id}
-									                        title={course.title}
-									                        description={course.description}
-									                        string_id={course.string_id}
-									                        schedule={course.schedule}
-									                        classroom_number={course.classroom_number}
-									                        spots_left={course.maximum_capacity}
-									                        credits={course.credit_hours}
-									                        cost={`$${course.tuition_cost}`}
-									                        isOpen={openCards.includes(course.string_id)}
-									                        toggleCard={() => toggleCard(course.string_id)}
-									                        addToCart={() => addToCart({
-									                            title: course.title,
-									                            string_id: course.string_id,
-									                            cost: `$${course.tuition_cost}`
-									                        })}
-									                    />
-										                ))}
-										            </div>
+              <>
+              <Header />
+                <div className='flex flex-col lg:flex-row p-4 lg:p-20'>
+									<div className="w-full lg:w-2/3 flex flex-col">
+									  <div className="relative">
+									    <div className="absolute inset-0 bg-white/20 backdrop-blur-md rounded-3xl shadow-md z-0" style={{ maxHeight: '75vh', overflow: 'hidden' }}></div>
+									      <div className="relative z-10 custom-scrollbar overflow-y-auto rounded-3xl" style={{ maxHeight: '75vh' }}>
+									        <div className="flex flex-col space-y-6 p-4 lg:p-6">
+									          {courses.map(course => (
+									              <RegisterCard
+									                  key={course.string_id}
+									                  title={course.title}
+									                  description={course.description}
+									                  string_id={course.string_id}
+									                  schedule={course.schedule}
+									                  classroom_number={course.classroom_number}
+									                  spots_left={course.maximum_capacity}
+									                  credits={course.credit_hours}
+									                  cost={`$${course.tuition_cost}`}
+									                  isOpen={openCards.includes(course.string_id)}
+									                  toggleCard={() => toggleCard(course.string_id)}
+									                  addToCart={() => addToCart({
+									                      title: course.title,
+									                      string_id: course.string_id,
+									                      cost: `$${course.tuition_cost}`
+									                  })}
+									              />
+										          ))}
 										        </div>
+										      </div>
 										    </div>
 										</div>
 
 
-                        <div className="w-full lg:w-1/3 lg:mt-0 mt-4 lg:ml-8 flex justify-center lg:justify-end">
-                            <div className="w-full max-w-md">
-                                <div className="overflow-y-auto" style={{ maxHeight: '75vh' }}>
-                                    <ShoppingCart cartItems={cartItems} setCartItems={setCartItems} handleConfirmPayment={handleConfirmPayment} />
-                                </div>
-                            </div>
+                    <div className="w-full lg:w-1/3 lg:mt-0 mt-4lg:ml-8 flex justify-center lg:justify-end">
+                      <div className="w-full max-w-md">
+                        <div className="overflow-y-auto" style={{maxHeight: '75vh' }}>
+                          <ShoppingCart cartItems={cartItems}setCartItems={setCartItems} handleConfirmPayment={handleConfirmPayment} />
                         </div>
-                    </div>
-                </>
+                      </div>
+                  </div>
+                </div>
+              </>
             )}
         </div>
     );
