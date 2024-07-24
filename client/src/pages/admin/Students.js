@@ -4,7 +4,7 @@ import { useAdminAuth } from '../../auth/auth';
 import backgroundImage from '../../assets/registerbg.webp';
 import { useSnackbar } from 'notistack';
 import LoadingSpinner from '../../components/LoadingSpinner';
-import StudentCard from '../../components/admin/StudentCard';
+import { StudentCard } from '../../components/admin/StudentCards';
 import NewStudent from '../../components/admin/NewStudent';
 
 const Students = () => {

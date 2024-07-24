@@ -68,7 +68,7 @@ const CreateAccount = () => {
             <input
               type="text"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => setFirstName(e.target.value.trim())}
               name="firstName"
               placeholder="First Name"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
@@ -77,33 +77,36 @@ const CreateAccount = () => {
             <input
               type="text"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => setLastName(e.target.value.trim())}
               name="lastName"
               placeholder="Last Name"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value.trim())}
               name="email"
               placeholder="Email"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
             <input
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value.trim())}
               name="phone"
               placeholder="Phone Number"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
+							required
             />
           </div>
           <div className="flex flex-col w-full md:w-1/2 pl-2">
             <input
               type="text"
               value={newUser}
-              onChange={(e) => setNewUser(e.target.value)}
+              onChange={(e) => setNewUser(e.target.value.trim())}
               name="username"
               placeholder="Create Username"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
@@ -112,7 +115,7 @@ const CreateAccount = () => {
             <input
               type="password"
               value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
+              onChange={(e) => setNewPassword(e.target.value.trim())}	
               name="password"
               placeholder="Create Password"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
@@ -121,7 +124,7 @@ const CreateAccount = () => {
             <input
               type="password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              onChange={(e) => setConfirmPassword(e.target.value.trim())}
               name="confirmPassword"
               placeholder="Confirm Password"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"

@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ReactComponent as UpArrow } from '../../assets/angle-up-solid.svg';
 import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg';
+import { ReactComponent as VerticalDots } from '../../assets/vertical-dots.svg';
 
-const StudentCard = ({ student, toggleCard, isOpen }) => {
+export const StudentCard = ({ student, toggleCard, isOpen }) => {
 		return (
-			<div className='bg-slate-100 rounded-lg p-6 mb-4 w-full max-w-2xl shadow-lg'>
+			<div className='bg-slate-100 rounded-lg p-6 w-full max-w-2xl shadow-lg'>
 				<div className='flex justify-between items-center cursor-pointer' onClick={toggleCard}>
 					<h2 className='text-xl font-semibold'>
 							{student.first_name} {student.last_name}
@@ -33,4 +34,35 @@ const StudentCard = ({ student, toggleCard, isOpen }) => {
 		);
 }
 
-export default StudentCard;
+export const CompactStudentCard = ({ student, onRemove }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setDropdownOpen(prevState => !prevState);
+  };
+
+  return (
+    <div className='bg-slate-100 rounded-lg p-4 w-full max-w-md shadow-lg flex justify-between items-center'>
+      <div className='text-left'>
+        <h2 className='text-lg font-semibold'>{student.first_name} {student.last_name}</h2>
+        <p className='text-xs text-gray-500'>ID: {student.user_id}</p>
+      </div>
+      <div className='relative'>
+        <button onClick={toggleDropdown} className='focus:outline-none'>
+          <VerticalDots className='w-6 h-6 text-gray-700' />
+        </button>
+        {dropdownOpen && (
+          <div className='absolute right-0 mt-2 w-30 bg-white border rounded shadow-md'>
+            <button
+              onClick={onRemove}
+              className='block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200'
+            >
+              Remove
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+

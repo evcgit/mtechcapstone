@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ReactComponent as UpArrow } from '../../assets/angle-up-solid.svg';
 import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg';
+import { StudentsModal , EditCourseModal } from './AdminModals';
 
-const RegisterCard = ({ title, isOpen, toggleCard, description, string_id, credits, cost, schedule, classroom_number, spots_left, showStudents, editClass }) => {
+const AdminCourses = ({ title, isOpen, toggleCard, description, string_id, credits, cost, schedule, classroom_number, spots_left }) => {
+	const [showStudents, setShowStudents] = useState(false);
+	const [showClassEdit, setShowClassEdit] = useState(false);
+
+	const toggleShowStudents = () => {
+		setShowStudents(prevState => !prevState);
+	};
+
+	const toggleShowClassEdit = () => {
+		setShowClassEdit(prevState => !prevState);
+	};
+
     return (
         <div className='bg-slate-100 rounded p-4'>
             <div className='flex justify-between items-center cursor-pointer' onClick={toggleCard}>
@@ -25,10 +37,10 @@ const RegisterCard = ({ title, isOpen, toggleCard, description, string_id, credi
                     <div className='text-center space-y-1'>
                         <p className='text-lg font-semibold text-gray-800'>{cost}</p>
                         <p className='text-md text-gray-700'>Credits: {credits}</p>
-                        <button onClick={editClass} className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white mr-2'>
-                            Edit
+                        <button onClick={toggleShowClassEdit} className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white mr-2'>
+                            Edit Course
                         </button>
-                        <button onClick={showStudents} className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white'>
+                        <button onClick={toggleShowStudents} className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white'>
                             Students
                         </button>
                     </div>
@@ -37,8 +49,21 @@ const RegisterCard = ({ title, isOpen, toggleCard, description, string_id, credi
                     {string_id}
                 </div>
             </div>
+						<StudentsModal 
+						isOpen={showStudents}
+						onClose={toggleShowStudents}
+						title={title}
+						string_id={string_id}
+						/>
+
+						<EditCourseModal
+						isOpen={showClassEdit}
+						onClose={toggleShowClassEdit}
+						title={title}
+						string_id={string_id}
+						/>
         </div>
     );
 };
 
-export default RegisterCard;
+export default AdminCourses;

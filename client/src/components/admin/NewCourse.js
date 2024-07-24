@@ -57,7 +57,7 @@ const NewCourse = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg">
+    <div className="bg-white p-6 rounded-lg shadow-lg h-fit">
       <h1 className="text-2xl font-bold mb-4 text-center">New Course</h1>
       <form className="flex flex-col" onSubmit={handleSubmit}>
         <div className="flex flex-wrap mb-3">
@@ -88,7 +88,7 @@ const NewCourse = () => {
               placeholder="Classroom Number"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
             />
-            <div className="flex items-center">
+            <div className="flex">
               <input
                 type="text"
                 value={schedule}
@@ -97,10 +97,10 @@ const NewCourse = () => {
                 placeholder="Class Schedule"
                 className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
               />
+							<p className="text-gray-500 text-xs ml-2 flex flex-col">Format <span>(MWF 9-10)</span></p>
             </div>
-            <p className="text-gray-500 text-xs ml-2">Format (MWF 9-10)</p>
           </div>
-          <div className="flex flex-col w-full md:w-1/2 pl-2">
+          <div className="flex flex-col w-full md:w-1/2 lg:pl-2">
             <input
               type="number"
               value={maxCapacity}
@@ -135,7 +135,7 @@ const NewCourse = () => {
           onChange={(e) => setDescription(e.target.value)}
           name="description"
           placeholder="Class Description"
-          className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none w-full resize-y"
+          className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none w-full max-h-72"
         />
         <div className="w-full flex justify-center mt-4">
           <input

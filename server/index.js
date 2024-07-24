@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             console.log('login failed');
             return res.status(401).json({ errorMessage: 'Invalid username or password' });
         }
-        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '3h' });
 
 
         console.log('login successful, token generated');
@@ -168,7 +168,6 @@ app.put('/courses/registered', async (req, res) => {
   const { cartItems } = req.body;
   try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      console.log('decoded:', decoded);
       const client = await pool.connect();
       try {
           await client.query('BEGIN');
@@ -207,6 +206,26 @@ app.put('/courses/registered', async (req, res) => {
   }
 });
 
+app.post('/registered/students', async (req, res) => {
+	const token = req.headers['authorization'].split(' ')[1];
+	const { string_id } = req.body;
+	try {
+			const decoded = jwt.verify(token, JWT_SECRET);
+			if (!decoded.isAdmin) {
+					return res.status(403).json({ errorMessage: 'Unauthorized' });
+			}
+			const client = await pool.connect();
+			const result = await client.query(
+					'SELECT * FROM users WHERE user_id IN (SELECT user_id FROM register WHERE string_id = $1)',
+					[string_id]
+			);
+			client.release();
+			res.status(200).json(result.rows);
+	} catch (error) {
+			console.error('Error fetching registered students:', error);
+			res.status(500).json({ errorMessage: 'Failed to fetch registered students' });
+	}
+});
 
 app.get('/students', async (req, res) => {
 		const token = req.headers['authorization'].split(' ')[1];
@@ -223,7 +242,6 @@ app.get('/students', async (req, res) => {
           result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
         }
 				client.release();
-				console.log('students:', result.rows);
 				res.status(200).json(result.rows);
 		} catch (error) {
 				console.error('Error fetching students:', error);

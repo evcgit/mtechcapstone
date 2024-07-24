@@ -80,7 +80,9 @@ const AdminHome = () => {
                             </div>
                         </div>
                     </div>
+										<div className="w-full lg:w-1/3 lg:mt-0 mt-4 lg:ml-8 flex justify-center lg:justify-end">
                     <NewCourse />
+										</div>
                 </div>
             )}
         </div>

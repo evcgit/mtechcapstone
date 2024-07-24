@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import backgroundImage from '../../assets/university.jpg';
 import LoadingSpinner  from '../../components/LoadingSpinner';
 import { useSnackbar } from 'notistack';
+import { jwtDecode } from 'jwt-decode';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -12,7 +13,15 @@ function Login() {
   const navigate = useNavigate();
 
 	useEffect(() => {
-		localStorage.getItem('token') && navigate('/home')
+		const token = localStorage.getItem('token');
+		if (token) {
+			const decoded = jwtDecode(token);
+			if (decoded.isAdmin) {
+				navigate('/admin/home');
+			} else {
+				navigate('/home');
+		}
+	}
 	}, [navigate]);
 
   const handleSubmit = async (e) => {
@@ -65,7 +74,7 @@ function Login() {
             <input
               type="text"
               value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => setUsername(e.target.value.trim())}
               name="username"
               placeholder="Username"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
@@ -73,7 +82,7 @@ function Login() {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value.trim())}
               name="password"
               placeholder="Password"
               className="border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none"
