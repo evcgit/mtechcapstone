@@ -199,33 +199,24 @@ app.delete('/courses/remove/:courseId', async (req, res) => {
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-
     await client.query('BEGIN');
-    
-    // Check if the course is registered by the user
     const checkCourse = await client.query(
       'SELECT * FROM register WHERE user_id = $1 AND string_id = $2',
       [decoded.sub, courseId]
     );
-    
     if (checkCourse.rows.length === 0) {
       await client.query('ROLLBACK');
       client.release();
       return res.status(404).json({ error: 'Course not found in user registration' });
     }
-
-    // Remove the course registration
     await client.query(
       'DELETE FROM register WHERE user_id = $1 AND string_id = $2',
       [decoded.sub, courseId]
     );
-
-    // Update the course's maximum capacity
     await client.query(
       'UPDATE courses SET maximum_capacity = maximum_capacity + 1 WHERE string_id = $1',
       [courseId]
     );
-
     await client.query('COMMIT');
     client.release();
     res.status(200).json({ message: 'Course removed successfully' });
@@ -234,7 +225,6 @@ app.delete('/courses/remove/:courseId', async (req, res) => {
     res.status(500).json({ error: 'Failed to remove course' });
   }
 });
-
 
 
 app.get('/students', async (req, res) => {
