@@ -122,6 +122,25 @@ app.put('/user/profile', async (req, res) => {
 });
 
 
+app.put('/admin/edit/user', async (req, res) => {
+	const { user_id, first_name, last_name, email, phone } = req.body;
+	const token = req.headers['authorization'].split(' ')[1];
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE user_id = $5', [first_name, last_name, email, phone, user_id]);
+		client.release();
+		res.status(200).json({ message: 'User updated successfully' });
+		console.log(`${decoded.username} updated user ${user_id}`);
+	} catch (error) {
+		console.error('Error updating user:', error);
+		res.status(500).json({ errorMessage: 'Failed to update user' });
+	}
+});
+
 
 app.get('/courses', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];  

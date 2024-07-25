@@ -63,17 +63,10 @@ const AdminHome = () => {
                                 <div className="flex flex-col space-y-6 p-4 lg:p-6">
                                     {courses.map(course => (
                                         <AdminCourses
-                                            key={course.string_id}
-                                            title={course.title}
-                                            description={course.description}
-                                            string_id={course.string_id}
-                                            schedule={course.schedule}
-                                            classroom_number={course.classroom_number}
-                                            spots_left={course.maximum_capacity}
-                                            credits={course.credit_hours}
-                                            cost={`$${course.tuition_cost}`}
-                                            isOpen={openCards.includes(course.string_id)}
-                                            toggleCard={() => toggleCard(course.string_id)}
+																					key={course.string_id}
+                                          course={course}
+                                          isOpen={openCards.includes(course.string_id)}
+                                          toggleCard={() => toggleCard(course.string_id)}
                                         />
                                     ))}
                                 </div>

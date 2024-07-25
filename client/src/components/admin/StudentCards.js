@@ -3,7 +3,7 @@ import { ReactComponent as UpArrow } from '../../assets/angle-up-solid.svg';
 import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg';
 import { ReactComponent as VerticalDots } from '../../assets/vertical-dots.svg';
 
-export const StudentCard = ({ student, toggleCard, isOpen }) => {
+export const StudentCard = ({ student, toggleCard, isOpen, onEdit }) => {
 		return (
 			<div className='bg-slate-100 rounded-lg p-6 w-full max-w-2xl shadow-lg'>
 				<div className='flex justify-between items-center cursor-pointer' onClick={toggleCard}>
@@ -20,7 +20,7 @@ export const StudentCard = ({ student, toggleCard, isOpen }) => {
 								<p className='text-lg font-semibold'>{student.user_phone}</p>
 							</div>
 							<div className='text-center'>
-								<button className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white'>
+								<button onClick={onEdit} className='text-slate-500 bg-slate-200 font-bold py-2 px-4 rounded border-2 border-slate-500 hover:bg-slate-300 hover:border-slate-600 hover:text-white'>
 										Edit
 								</button>
 							</div>
@@ -42,27 +42,27 @@ export const CompactStudentCard = ({ student, onRemove }) => {
   };
 
   return (
-    <div className='bg-slate-100 rounded-lg p-4 w-full max-w-md shadow-lg flex justify-between items-center'>
-      <div className='text-left'>
-        <h2 className='text-lg font-semibold'>{student.first_name} {student.last_name}</h2>
-        <p className='text-xs text-gray-500'>ID: {student.user_id}</p>
-      </div>
-      <div className='relative'>
-        <button onClick={toggleDropdown} className='focus:outline-none'>
-          <VerticalDots className='w-6 h-6 text-gray-700' />
-        </button>
-        {dropdownOpen && (
-          <div className='absolute right-0 mt-2 w-30 bg-white border rounded shadow-md'>
-            <button
-              onClick={onRemove}
-              className='block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200'
-            >
-              Remove
-            </button>
-          </div>
-        )}
-      </div>
-    </div>
+		<div className='bg-slate-100 rounded-lg p-4 w-full max-w-md shadow-lg flex justify-between items-center'>
+		  <div className='text-left'>
+		    <h2 className='text-lg font-semibold'>{student.first_name} {student.last_name}</h2>
+		    <p className='text-xs text-gray-500'>ID: {student.user_id}</p>
+		  </div>
+		  <div className='relative flex items-center'>
+		    <button onClick={toggleDropdown} className='focus:outline-none'>
+		      <VerticalDots className='w-6 h-6 text-gray-700' />
+		    </button>
+		    {dropdownOpen && (
+		      <div className='absolute right-0 top-10 w-30 bg-white border rounded shadow-md'>
+		        <button
+		          onClick={onRemove}
+		          className='block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200'
+		        >
+		          Remove
+		        </button>
+		      </div>
+		    )}
+		  </div>
+		</div>
   );
 };
 

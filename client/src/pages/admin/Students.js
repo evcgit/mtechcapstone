@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { StudentCard } from '../../components/admin/StudentCards';
 import NewStudent from '../../components/admin/NewStudent';
+import { EditUser } from '../../components/admin/AdminModals';
 
 const Students = () => {
 	useAdminAuth();
@@ -13,6 +14,8 @@ const Students = () => {
 	const [loading, setLoading] = useState(true);
 	const [students, setStudents] = useState([]);
 	const [openCards, setOpenCards] = useState([]);
+	const [openEdit, setOpenEdit] = useState(false);
+	const [selectedStudent, setSelectedStudent] = useState(null);
 
 	useEffect(() => {
 		const fetchStudents = async () => {
@@ -42,6 +45,24 @@ const Students = () => {
 		fetchStudents();
 	}, [enqueueSnackbar]);
 
+	const openEditModal = (student) => {
+		setOpenEdit(true);
+		setSelectedStudent(student)
+	};
+
+	const closeEditModal = () => {
+		setOpenEdit(false);
+		setSelectedStudent(null);
+	};
+
+		const handleStudentUpdate = (updatedStudent) => {
+		setStudents(prevStudents => 
+			prevStudents.map(student => 
+				student.user_id === updatedStudent.user_id ? updatedStudent : student
+			)
+		);
+	};
+
 	const toggleCard = (user_id) => {
 		setOpenCards(prevOpenCards => 
 			prevOpenCards.includes(user_id) 
@@ -70,6 +91,7 @@ const Students = () => {
 												student={student}
 												toggleCard={() => toggleCard(student.user_id)}
 												isOpen={openCards.includes(student.user_id)}
+												onEdit = {() => openEditModal(student)}
 											/>
 										))}
 									</div>
@@ -86,6 +108,15 @@ const Students = () => {
 						</div>
 					</div>
 				</>
+			)}
+
+			{selectedStudent && (
+				<EditUser 
+					isOpen={openEdit}
+					onClose={closeEditModal}
+					user={selectedStudent}
+					onStudentUpdate={handleStudentUpdate}
+				/>
 			)}
 		</div>
 	);
