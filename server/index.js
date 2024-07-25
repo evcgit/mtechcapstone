@@ -225,6 +225,57 @@ app.put('/courses/registered', async (req, res) => {
   }
 });
 
+app.delete('/courses/remove/:courseId', async (req, res) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  const { courseId } = req.params;
+
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const client = await pool.connect();
+
+    await client.query('BEGIN');
+    
+    // Check if the course is registered by the user
+    const checkCourse = await client.query(
+      'SELECT * FROM register WHERE user_id = $1 AND string_id = $2',
+      [decoded.sub, courseId]
+    );
+    
+    if (checkCourse.rows.length === 0) {
+      await client.query('ROLLBACK');
+      client.release();
+      return res.status(404).json({ error: 'Course not found in user registration' });
+    }
+
+    // Remove the course registration
+    await client.query(
+      'DELETE FROM register WHERE user_id = $1 AND string_id = $2',
+      [decoded.sub, courseId]
+    );
+
+    // Update the course's maximum capacity
+    await client.query(
+      'UPDATE courses SET maximum_capacity = maximum_capacity + 1 WHERE string_id = $1',
+      [courseId]
+    );
+
+    await client.query('COMMIT');
+    client.release();
+    res.status(200).json({ message: 'Course removed successfully' });
+  } catch (error) {
+    console.error('Error removing course:', error);
+    res.status(500).json({ error: 'Failed to remove course' });
+  }
+});
+
+
+
+
+
 app.post('/registered/students', async (req, res) => {
 	const token = req.headers['authorization'].split(' ')[1];
 	const { string_id } = req.body;
