@@ -48,6 +48,9 @@ const NewCourse = () => {
         setCredits('');
         setCost('');
         enqueueSnackbar('Course created', { variant: 'success' });
+        setTimeout(() => {
+          window.location.reload();
+        }, 600);
       }
     })
     .catch((error) => {

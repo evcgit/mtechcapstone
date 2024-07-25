@@ -55,7 +55,7 @@ const Students = () => {
 		setSelectedStudent(null);
 	};
 
-		const handleStudentUpdate = (updatedStudent) => {
+	const handleStudentUpdate = (updatedStudent) => {
 		setStudents(prevStudents => 
 			prevStudents.map(student => 
 				student.user_id === updatedStudent.user_id ? updatedStudent : student
