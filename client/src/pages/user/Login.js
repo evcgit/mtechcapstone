@@ -20,7 +20,9 @@ function Login() {
 				navigate('/admin/home');
 			} else {
 				navigate('/home');
-		}
+      }
+		} else { 
+      setLoading(false);
 	}
 	}, [navigate]);
 
