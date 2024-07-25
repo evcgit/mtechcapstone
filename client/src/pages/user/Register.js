@@ -98,14 +98,7 @@ const Register = () => {
 									          {courses.map(course => (
 									              <RegisterCard
 									                  key={course.string_id}
-									                  title={course.title}
-									                  description={course.description}
-									                  string_id={course.string_id}
-									                  schedule={course.schedule}
-									                  classroom_number={course.classroom_number}
-									                  spots_left={course.maximum_capacity}
-									                  credits={course.credit_hours}
-									                  cost={`$${course.tuition_cost}`}
+									                  course={course}
 									                  isOpen={openCards.includes(course.string_id)}
 									                  toggleCard={() => toggleCard(course.string_id)}
 									                  addToCart={() => addToCart({
@@ -119,8 +112,6 @@ const Register = () => {
 										      </div>
 										    </div>
 										</div>
-
-
                     <div className="w-full lg:w-1/3 lg:mt-0 mt-4lg:ml-8 flex justify-center lg:justify-end">
                       <div className="w-full max-w-md">
                         <div className="overflow-y-auto" style={{maxHeight: '75vh' }}>
