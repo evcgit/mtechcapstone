@@ -107,15 +107,16 @@ const Home = () => {
       ) : (
         <>
           <Header />
-          <div className='flex flex-col lg:flex-row lg:space-x-8 p-4 lg:p-8 h-full'>
-            <div className='flex-1 lg:w-1/3 bg-slate-100 rounded-lg p-4 h-5/6 flex flex-col'> {/* Adjust width */}
+          <div className='flex flex-col lg:flex-row lg:space-x-8 p-4 lg:p-8 h-full justify-between'>
+            <div className='flex-1 lg:w-1/3 bg-slate-100 rounded-lg p-4 h-5/6 flex flex-col'> {/* Calendar */}
               <h2 className='text-lg lg:text-xl text-center font-semibold mb-2'>{dayName}</h2>
               <h2 className='text-xl lg:text-2xl text-center font-semibold mb-2'>{today.toLocaleDateString()}</h2>
               <div className='flex-1 overflow-auto'>
                 <Calendar />
               </div>
             </div>
-            <div className='flex-1 lg:w-2/3 flex flex-col space-y-4'> {/* Adjust width */}
+            <div className='lg:w-1/6'></div>
+            <div className='flex-1 lg:w-1/2 flex flex-col space-y-4'> {/* Welcome and Registered Courses */}
               <div className='bg-white/60 backdrop-blur-md rounded-3xl shadow-md p-6 flex justify-center items-center'>
                 <p className='text-gray-800 text-2xl font-bold'>
                   Welcome {firstName}!
