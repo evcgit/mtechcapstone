@@ -47,10 +47,10 @@ const Header = () => {
       </div>
       {isOpen && (
         <div className="absolute top-16 right-4 w-48 bg-white/20 backdrop-blur-md rounded shadow-md p-4 flex flex-col items-start z-50">
-					<a href="/home" className="relative w-full text-left py-2 text-lg">
+					<a href="/admin/home" className="relative w-full text-left py-2 text-lg">
             Home
           </a>
-          <a href="/register" className="relative w-full text-left py-2 text-lg">
+          <a href="/students" className="relative w-full text-left py-2 text-lg">
             Students
           </a>
           <a href="/profile" className="relative w-full text-left py-2 text-lg">

@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             console.log('login failed');
             return res.status(401).json({ errorMessage: 'Invalid username or password' });
         }
-        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '1h' });
+        const token = jwt.sign({ sub: user.user_id, username: user.username, isAdmin: user.user_admin, principal: user.master_admin }, JWT_SECRET, { algorithm: 'HS256', expiresIn: '3h' });
 
 
         console.log('login successful, token generated');
@@ -122,6 +122,25 @@ app.put('/user/profile', async (req, res) => {
 });
 
 
+app.put('/admin/edit/user', async (req, res) => {
+	const { user_id, first_name, last_name, email, phone } = req.body;
+	const token = req.headers['authorization'].split(' ')[1];
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		await client.query('UPDATE users SET first_name = $1, last_name = $2, user_email = $3, user_phone = $4 WHERE user_id = $5', [first_name, last_name, email, phone, user_id]);
+		client.release();
+		res.status(200).json({ message: 'User updated successfully' });
+		console.log(`${decoded.username} updated user ${user_id}`);
+	} catch (error) {
+		console.error('Error updating user:', error);
+		res.status(500).json({ errorMessage: 'Failed to update user' });
+	}
+});
+
 
 app.get('/courses', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];  
@@ -143,13 +162,31 @@ app.get('/courses', async (req, res) => {
   }
 });
 
+app.post('/courses', async (req, res) => {
+  const { title, stringId, description, schedule, classroomNumber, maxCapacity, credits, cost } = req.body;
+  const token = req.headers['authorization'].split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ errorMessage: 'Unauthorized' });
+    }
+    const client = await pool.connect();
+    await client.query('INSERT INTO courses (title, string_id, description, schedule, classroom_number, maximum_capacity, credit_hours, tuition_cost) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)', [title, stringId, description, schedule, classroomNumber, maxCapacity, credits, cost]);
+    client.release();
+    console.log('Course created:', { title, description, schedule, classroomNumber, maxCapacity, credits, cost });
+    res.status(201).json({ message: 'Course created' });
+  } catch (error) {
+    console.error('Error creating course:', error);
+    res.status(500).json({ errorMessage: 'Failed to create course' });
+  }
+});
+
 
 app.put('/courses/registered', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];
   const { cartItems } = req.body;
   try {
       const decoded = jwt.verify(token, JWT_SECRET);
-      console.log('decoded:', decoded);
       const client = await pool.connect();
       try {
           await client.query('BEGIN');
@@ -227,6 +264,30 @@ app.delete('/courses/remove/:courseId', async (req, res) => {
 });
 
 
+
+
+
+app.post('/registered/students', async (req, res) => {
+	const token = req.headers['authorization'].split(' ')[1];
+	const { string_id } = req.body;
+	try {
+			const decoded = jwt.verify(token, JWT_SECRET);
+			if (!decoded.isAdmin) {
+					return res.status(403).json({ errorMessage: 'Unauthorized' });
+			}
+			const client = await pool.connect();
+			const result = await client.query(
+					'SELECT * FROM users WHERE user_id IN (SELECT user_id FROM register WHERE string_id = $1)',
+					[string_id]
+			);
+			client.release();
+			res.status(200).json(result.rows);
+	} catch (error) {
+			console.error('Error fetching registered students:', error);
+			res.status(500).json({ errorMessage: 'Failed to fetch registered students' });
+	}
+});
+
 app.get('/students', async (req, res) => {
 		const token = req.headers['authorization'].split(' ')[1];
 		try {
@@ -242,7 +303,6 @@ app.get('/students', async (req, res) => {
           result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
         }
 				client.release();
-				console.log('students:', result.rows);
 				res.status(200).json(result.rows);
 		} catch (error) {
 				console.error('Error fetching students:', error);
