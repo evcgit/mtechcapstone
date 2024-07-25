@@ -90,7 +90,7 @@ const Profile = () => {
     return (
       <div className='h-screen flex flex-col bg-cover' 
       style={{ backgroundImage: `url(${backgroundImage})` }}>
-				{isAdmin ? ( <Header /> ) : ( <AdminHeader /> )}
+				{!isAdmin ? ( <Header /> ) : ( <AdminHeader /> )}
             {loading ? (
                 <LoadingSpinner />
             ) : (
