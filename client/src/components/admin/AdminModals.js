@@ -31,13 +31,20 @@ export const StudentsModal = ({ isOpen, onClose, string_id, title }) => {
 			fetchStudents();
 		}
 	}, [isOpen, string_id]);
+
+	const handleBackgroundClick = (e) => {
+		if (e.target === e.currentTarget) {
+				onClose();
+		}
+	};
 	
 	
 	if (!isOpen) {
 		return null;
 	}
 	return (
-		<div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50'>
+		<div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50'
+		onClick={handleBackgroundClick}>
 			<div className='bg-white p-8 rounded shadow-lg max-w-lg max-h-[80vh] overflow-hidden'>
 				<h2 className='text-lg font-semibold mb-4'>{title} Students</h2>
 				<div className='max-h-[60vh] overflow-y-auto'>
@@ -61,11 +68,19 @@ export const StudentsModal = ({ isOpen, onClose, string_id, title }) => {
 }
 
 export const EditCourseModal = ({ isOpen, onClose, title, string_id }) => {	
+	
+	const handleBackgroundClick = (e) => {
+		if (e.target === e.currentTarget) {
+				onClose();
+		}
+	};
+	
 	if (!isOpen) {
 		return null;
 	}
 	return (
-		<div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50'>
+		<div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50'
+		onClick={handleBackgroundClick}>
 			<div className='bg-white p-8 rounded shadow-lg'>
 				<h2 className='text-lg font-semibold mb-4'>{title}</h2>
 				<span>{string_id}</span>
@@ -132,70 +147,98 @@ export const EditUser = ({ isOpen, onClose, user, onStudentUpdate }) => {
 		})
 	};
 
+	const handleBackgroundClick = (e) => {
+		if (e.target === e.currentTarget) {
+				onClose();
+		}
+	};
+
 	if (!isOpen) {
 		return null;
 	}
 
 	return (
-		<div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50'>
-			<div className='bg-white p-8 rounded shadow-lg w-11/12 md:w-2/3 lg:w-1/2 xl:w-1/3'>
+		<div 
+		className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50' 
+		onClick={handleBackgroundClick}
+>
+		<div className='bg-white p-8 rounded shadow-lg w-11/12 md:w-2/3 lg:w-1/2 xl:w-1/3 relative'>
+				<button 
+						onClick={onClose} 
+						className='absolute top-2 right-2 text-gray-500 hover:text-gray-700'
+				>
+						<svg 
+								xmlns="http://www.w3.org/2000/svg" 
+								className="h-6 w-6" 
+								fill="none" 
+								viewBox="0 0 24 24" 
+								stroke="currentColor"
+						>
+								<path 
+										strokeLinecap="round" 
+										strokeLinejoin="round" 
+										strokeWidth={2} 
+										d="M6 18L18 6M6 6l12 12" 
+								/>
+						</svg>
+				</button>
 				<h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>Edit Student</h2>
 				<form>
-					<div className='space-y-4'>
-						<div className='flex flex-col w-full text-center'>
-							<input
-								type='text'
-								value={updatedFirstName}
-								onChange={(e) => setUpdatedFirstName(e.target.value)}
-								name='firstName'
-								placeholder='First Name'
-								className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
-							/>
-							<input
-								type='text'
-								value={updatedLastName}
-								onChange={(e) => setUpdatedLastName(e.target.value)}
-								name='lastName'
-								placeholder='Last Name'
-								className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
-							/>
-							<input
-								type='email'
-								value={updatedEmail}
-								onChange={(e) => setUpdatedEmail(e.target.value)}
-								name='email'
-								placeholder='Email'
-								className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
-							/>
-							<input
-								type='tel'
-								value={updatedPhone}
-								onChange={(e) => setUpdatedPhone(e.target.value)}
-								name='phone'
-								placeholder='Phone Number'
-								className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
-							/>
+						<div className='space-y-4'>
+								<div className='flex flex-col w-full text-center'>
+										<input
+												type='text'
+												value={updatedFirstName}
+												onChange={(e) => setUpdatedFirstName(e.target.value)}
+												name='firstName'
+												placeholder='First Name'
+												className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
+										/>
+										<input
+												type='text'
+												value={updatedLastName}
+												onChange={(e) => setUpdatedLastName(e.target.value)}
+												name='lastName'
+												placeholder='Last Name'
+												className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
+										/>
+										<input
+												type='email'
+												value={updatedEmail}
+												onChange={(e) => setUpdatedEmail(e.target.value)}
+												name='email'
+												placeholder='Email'
+												className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
+										/>
+										<input
+												type='tel'
+												value={updatedPhone}
+												onChange={(e) => setUpdatedPhone(e.target.value)}
+												name='phone'
+												placeholder='Phone Number'
+												className='border-2 border-gray-300 rounded mb-3 p-2 focus:border-blue-500 focus:outline-none mx-1'
+										/>
+								</div>
+								<div className='flex justify-center space-x-3'>
+										<button
+												type='button'
+												className='px-6 py-2 bg-white text-red-500 border-2 border-red-500 font-semibold rounded-lg shadow hover:bg-red-600 hover:text-white transition duration-300'
+												onClick={onClose}
+										>
+												Delete
+										</button>
+										<button
+												type='button'
+												className='px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300'
+												onClick={handleSave}
+										>
+												Save
+										</button>
+								</div>
 						</div>
-						<div className='flex justify-center space-x-3'>
-							<button
-								type='button'
-								className='px-6 py-2 bg-gray-300 text-gray-800 font-semibold rounded-lg shadow hover:bg-gray-400 transition duration-300'
-								onClick={onClose}
-							>
-								Cancel
-							</button>
-							<button
-								type='button'
-								className='px-6 py-2 bg-green-500 text-white font-semibold rounded-lg shadow hover:bg-green-600 transition duration-300'
-								onClick={handleSave}
-							>
-								Save
-							</button>
-						</div>
-					</div>
 				</form>
-			</div>
 		</div>
+</div>
 	);
 };
 

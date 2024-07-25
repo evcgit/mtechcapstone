@@ -32,7 +32,7 @@ const AdminCourses = ({ isOpen, toggleCard, course }) => {
                     <div className='text-left space-y-1'>
                         <p className='text-lg font-semibold'>{course.classroom_number}</p>
                         <p className='text-md text-gray-700'>{course.schedule}</p>
-                        <p className='text-md text-gray-700'>Spots Left: {course.spots_left}</p>
+                        <p className='text-md text-gray-700'>Spots Left: {course.maximum_capacity}</p>
                     </div>
                     <div className='text-center space-y-1'>
                         <p className='text-lg font-semibold text-gray-800'>{course.cost}</p>
