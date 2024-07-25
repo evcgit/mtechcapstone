@@ -115,35 +115,36 @@ const Calendar = () => {
     });
 
     return (
-        <div className='flex flex-col h-full bg-gray-50 rounded-lg shadow-lg p-4'>
-            <div className='flex flex-col'>
-                <div className='flex-grow overflow-y-auto'>
-                    <div className='space-y-4'>
-                        {timeSlots.map((time, index) => (
-                            <div key={index} className='relative flex flex-col p-4 bg-white border border-gray-300 rounded-lg shadow-md'>
-                                <div className='text-gray-600 font-semibold mb-2'>{time}</div>
-                                <div className='relative'>
-                                    {timeSlotEvents[time].length > 0 ? (
-                                        timeSlotEvents[time].map((event, eventIndex) => (
-                                            <div
-                                                key={eventIndex}
-                                                className='bg-blue-200 text-blue-800 rounded-lg px-3 py-2 mb-2 shadow-sm'
-                                                style={{ position: 'relative', zIndex: 1 }}
-                                            >
-                                                <span className='text-sm'>{event.title} ({event.schedule})</span>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <div className='text-gray-400 text-sm'>No events</div>
-                                    )}
-                                </div>
-                            </div>
-                        ))}
+        <div className='flex flex-col h-full bg-gray-50 rounded-lg shadow-lg p-2'>
+    <div className='flex flex-col'>
+        <div className='flex-grow overflow-y-auto custom-scrollbar'>
+            <div className='space-y-2'>
+                {timeSlots.map((time, index) => (
+                    <div key={index} className='relative flex flex-col p-2 bg-white border border-gray-300 rounded-lg shadow-md'>
+                        <div className='text-gray-600 font-semibold mb-1'>{time}</div>
+                        <div className='relative'>
+                            {timeSlotEvents[time].length > 0 ? (
+                                timeSlotEvents[time].map((event, eventIndex) => (
+                                    <div
+                                        key={eventIndex}
+                                        className='bg-blue-200 text-blue-800 rounded-lg px-2 py-1 mb-1 shadow-sm text-xs'
+                                        style={{ position: 'relative', zIndex: 1 }}
+                                    >
+                                        <span className='text-sm'>{event.title}</span>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className='text-gray-400 text-xs'>No events</div>
+                            )}
+                        </div>
                     </div>
-                </div>
+                ))}
             </div>
         </div>
+    </div>
+</div>
+
     );
-};
+    };
 
 export default Calendar;
