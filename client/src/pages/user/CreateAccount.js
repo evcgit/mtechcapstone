@@ -2,6 +2,16 @@ import React, { useState } from "react";
 import backgroundImage from "../../assets/registeruni.jpg";
 import { useSnackbar } from 'notistack';
 
+const formatName = (name) => {
+	if (!name) return '';
+	const trimmedName = name.trim();
+	if (trimmedName.length === 0) return '';
+	const firstLetter = trimmedName.charAt(0).toUpperCase();
+	const lastLetter = trimmedName.charAt(trimmedName.length - 1).toLowerCase();
+	const middle = trimmedName.slice(1, -1).toLowerCase();
+	return `${firstLetter}${middle}${lastLetter}`;
+};
+
 const CreateAccount = () => {
   const [newUser, setNewUser] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -10,20 +20,20 @@ const CreateAccount = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phone, setPhone] = useState('');
-	const { enqueueSnackbar } = useSnackbar();
+		const { enqueueSnackbar } = useSnackbar();
 
   const handleSubmit = (e) => {
 		e.preventDefault();
 
 		const userData = {
-			username: newUser,
+			username: newUser.toLowerCase(),
 			password: newPassword,
-      confirmPassword: confirmPassword,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      userAdmin: false,
-      phone: phone
+   confirmPassword: confirmPassword,
+   email: email,
+   firstName: formatName(firstName),
+   lastName: formatName(lastName),
+   userAdmin: false,
+   phone: phone
 		};
 
 		fetch('/createAccount', {
