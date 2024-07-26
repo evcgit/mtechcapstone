@@ -24,6 +24,7 @@ const Students = () => {
 					headers: {
             method: 'GET',
 						'Content-Type': 'Application/json',
+						'Authorization': `Bearer ${localStorage.getItem('token')}`
 					}
 				});
 				if (response.ok) {
