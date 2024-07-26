@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useSnackbar } from 'notistack';
 
@@ -9,6 +9,10 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
     const [discountedPrice, setDiscountedPrice] = useState(totalPrice);
     const [showCourses, setShowCourses] = useState(false);
     const { enqueueSnackbar } = useSnackbar();
+
+    useEffect(() => {
+        setDiscountedPrice(totalPrice);
+    }, [totalPrice]);
 
     const handleProceedToPayment = () => {
         setIsPaymentView(true);
@@ -29,9 +33,13 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
 
     const handleConfirmPaymentClose = (e) => {
         e.preventDefault();
-        handleConfirmPayment(e);
-        onRequestClose();
-        setIsPaymentView(false);
+        if (discountedPrice === 0) {
+            handleConfirmPayment(e);
+            onRequestClose();
+            setIsPaymentView(false);
+        } else {
+            enqueueSnackbar('Total amount due must be $0 to confirm payment', { variant: 'error' });
+        }
     };
 
     return (
@@ -154,7 +162,8 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                             <button
                                                 onClick={handleConfirmPaymentClose}
                                                 type="submit"
-                                                className="bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600"
+                                                className={`bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600 ${discountedPrice !== 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                                disabled={discountedPrice !== 0}
                                             >
                                                 Confirm Payment
                                             </button>
@@ -187,7 +196,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                             onClick={onRequestClose}
                                             className="bg-gray-500 text-white px-4 py-2 rounded-lg transition hover:bg-gray-600"
                                         >
-                                            Close
+                                            Cancel
                                         </button>
                                         <button
                                             onClick={handleProceedToPayment}
