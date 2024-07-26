@@ -369,26 +369,27 @@ app.post('/registered/students', async (req, res) => {
 });
 
 app.get('/students', async (req, res) => {
-		const token = req.headers['authorization']?.split(' ')[1];
-		if (!token) {
+	const token = req.headers['authorization']?.split(' ')[1];
+	if (!token) {
 			return res.status(403).json({ errorMessage: 'Unauthorized' });
-		}
-		try {
-				const decoded = jwt.verify(token, JWT_SECRET);
-				const client = await pool.connect();
-        let result;
-        if (decoded.masterAdmin) {
-          result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
-        } else {
-          result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
-        }
-				client.release();
-				res.status(200).json(result.rows);
-		} catch (error) {
-				console.error('Error fetching students:', error);
-				res.status(500).json({ errorMessage: 'Failed to fetch students' });
-		}
+	}
+	try {
+			const decoded = jwt.verify(token, JWT_SECRET);
+			const client = await pool.connect();
+			let result;
+			if (decoded.masterAdmin) {
+					result = await client.query('SELECT * FROM users WHERE user_id != $1 ORDER BY user_id', [decoded.sub]);
+			} else {
+					result = await client.query('SELECT * FROM users WHERE user_id != $1 AND user_admin = false ORDER BY user_id', [decoded.sub]);
+			}
+			client.release();
+			res.status(200).json(result.rows);
+	} catch (error) {
+			console.error('Error fetching students:', error);
+			res.status(500).json({ errorMessage: 'Failed to fetch students' });
+	}
 });
+
 
 app.get('/courses/schedule', async (req, res) => {
     const token = req.headers['authorization']?.split(' ')[1];

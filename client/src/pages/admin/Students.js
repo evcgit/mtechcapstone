@@ -19,12 +19,12 @@ const Students = () => {
 
   useEffect(() => {
     const fetchStudents = async () => {
-      fetch('/students', {
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      })
+					fetch('/students', {
+						headers: {
+								'Content-Type': 'application/json',
+								'authorization': `Bearer ${localStorage.getItem('token')}`
+						}
+					})
       .then(response => response.json())
       .then(data => {
         if (data.error) {
