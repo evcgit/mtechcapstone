@@ -370,12 +370,11 @@ app.post('/registered/students', async (req, res) => {
 
 app.get('/students', async (req, res) => {
 		const token = req.headers['Authorization']?.split(' ')[1];
-    console.log(req.headers);
+		if (!token) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
 		try {
 				const decoded = jwt.verify(token, JWT_SECRET);
-				if (!decoded.isAdmin) {
-						return res.status(403).json({ errorMessage: 'Unauthorized' });
-				}
 				const client = await pool.connect();
         let result;
         if (decoded.masterAdmin) {

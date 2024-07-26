@@ -22,7 +22,7 @@ const Students = () => {
       fetch('/students', {
         headers: {
           'Content-Type': 'Application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       .then(response => response.json())
