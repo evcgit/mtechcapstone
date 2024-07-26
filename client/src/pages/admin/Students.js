@@ -17,33 +17,33 @@ const Students = () => {
 	const [openEdit, setOpenEdit] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 
-	useEffect(() => {
-		const fetchStudents = async () => {
-			try {
-				const response = await fetch('/students', {
-					headers: {
-						'Content-Type': 'Application/json',
-						Authorization: `Bearer ${localStorage.getItem('token')}`
-					}
-				});
-				if (response.ok) {
-					const data = await response.json();
-					setTimeout(() => {
-						setStudents(data);
-						setLoading(false);
-					}, 700);
-				} else {
-					const errorData = await response.json();
-					enqueueSnackbar(errorData.errorMessage, { variant: 'error' });
-				}
-			} catch (error) {
-				console.error('Error fetching students:', error);
-				enqueueSnackbar('Error fetching students', { variant: 'error' });
-			}
-		};
+  useEffect(() => {
+    const fetchStudents = async () => {
+      fetch('/students', {
+        headers: {
+          'Content-Type': 'Application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.error) {
+          enqueueSnackbar(data.error, { variant: 'error' });
+          return;
+        }
+        setTimeout(() => {
+          setStudents(data);
+          setLoading(false);
+        }, 700);
+      })
+      .catch(error => {
+        console.error('Error fetching students:', error);
+        enqueueSnackbar('Error fetching students', { variant: 'error' });
+      });
+    };
+    fetchStudents();
+  }, [enqueueSnackbar]);
 
-		fetchStudents();
-	}, [enqueueSnackbar]);
 
 	const openEditModal = (student) => {
 		setOpenEdit(true);
