@@ -370,6 +370,7 @@ app.post('/registered/students', async (req, res) => {
 
 app.get('/students', async (req, res) => {
 		const token = req.headers['Authorization']?.split(' ')[1];
+    console.log(req.headers);
 		try {
 				const decoded = jwt.verify(token, JWT_SECRET);
 				if (!decoded.isAdmin) {
