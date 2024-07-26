@@ -85,11 +85,10 @@ app.post('/createAccount', async (req, res) => {
 
 app.get('/user/profile', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    const result = await client.query('SELECT first_name, last_name, user_email, user_phone FROM users WHERE username = $1', [decoded.username]);
+    const result = await client.query('SELECT first_name, last_name, user_email, user_phone, user_admin FROM users WHERE username = $1', [decoded.username]);
     client.release();
 
     if (result.rows.length === 0) {
@@ -141,6 +140,46 @@ app.put('/admin/edit/user', async (req, res) => {
 	}
 });
 
+app.delete('/admin/delete/user', async (req, res) => {
+	const { user_id } = req.body;
+	const token = req.headers['authorization'].split(' ')[1];
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		await client.query('DELETE FROM users WHERE user_id = $1', [user_id]);
+		client.release();
+		res.status(200).json({ message: 'User deleted successfully' });
+		console.log(`${decoded.username} deleted user ${user_id}`);
+	} catch (error) {
+		console.error('Error deleting user:', error);
+		res.status(500).json({ errorMessage: 'Failed to delete user' });
+	}
+});
+
+app.delete('/admin/students/courses', async (req, res) => {
+  const token = req.headers['authorization']?.split(' ')[1];
+  const { user_id, string_id } = req.body;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ errorMessage: 'Unauthorized' });
+    }
+    const client = await pool.connect();
+    await client.query('BEGIN');
+    await client.query('DELETE FROM register WHERE user_id = $1 AND string_id = $2', [user_id, string_id]);
+    await client.query('UPDATE courses SET maximum_capacity = maximum_capacity + 1 WHERE string_id = $1', [string_id]);
+    await client.query('COMMIT');
+    client.release();
+    res.status(200).json({ message: 'Course removed successfully' });
+  } catch (error) {
+    console.error('Error removing course:', error);
+    res.status(500).json({ error: 'Failed to remove course' });
+  }
+});
+
 
 app.get('/courses', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];  
@@ -177,7 +216,7 @@ app.post('/courses', async (req, res) => {
     res.status(201).json({ message: 'Course created' });
   } catch (error) {
     console.error('Error creating course:', error);
-    res.status(500).json({ errorMessage: 'Failed to create course' });
+    res.status(500).json({ errorMessage: 'Failed to create course ' + error });
   }
 });
 
@@ -222,6 +261,44 @@ app.put('/courses/registered', async (req, res) => {
   } catch (error) {
       console.error('Error registering courses:', error);
       res.status(500).json({ errorMessage: 'Failed to register courses' });
+  }
+});
+
+app.put('/admin/edit/course', async (req, res) => {
+  const { string_id, title, description, schedule, classroom_number, maximum_capacity, credit_hours, tuition_cost } = req.body;
+  const token = req.headers['authorization'].split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ errorMessage: 'Unauthorized' });
+    }
+    const client = await pool.connect();
+    await client.query('UPDATE courses SET title = $1, description = $2, schedule = $3, classroom_number = $4, maximum_capacity = $5, credit_hours = $6, tuition_cost = $7 WHERE string_id = $8', [title, description, schedule, classroom_number, maximum_capacity, credit_hours, tuition_cost, string_id]);
+    client.release();
+    res.status(200).json({ message: 'Course updated successfully' });
+    console.log(`${decoded.username} updated course ${string_id}`);
+  } catch (error) {
+    console.error('Error updating course:', error);
+    res.status(500).json({ errorMessage: 'Failed to update course' });
+  }
+});
+
+app.delete('/admin/delete/course', async (req, res) => {
+  const { string_id } = req.body;
+  const token = req.headers['authorization'].split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded.isAdmin) {
+      return res.status(403).json({ errorMessage: 'Unauthorized' });
+    }
+    const client = await pool.connect();
+    await client.query('DELETE FROM courses WHERE string_id = $1', [string_id]);
+    client.release();
+    res.status(200).json({ message: 'Course deleted successfully' });
+    console.log(`${decoded.username} deleted course ${string_id}`);
+  } catch (error) {
+    console.error('Error deleting course:', error);
+    res.status(500).json({ errorMessage: 'Failed to delete course' });
   }
 });
 

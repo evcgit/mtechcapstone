@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ReactComponent as UpArrow } from '../../assets/angle-up-solid.svg';
 import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg';
 import { ReactComponent as VerticalDots } from '../../assets/vertical-dots.svg';
+import { useSnackbar } from 'notistack';
 
 export const StudentCard = ({ student, toggleCard, isOpen, onEdit }) => {
 		return (
@@ -34,8 +35,34 @@ export const StudentCard = ({ student, toggleCard, isOpen, onEdit }) => {
 		);
 }
 
-export const CompactStudentCard = ({ student, onRemove }) => {
+export const CompactStudentCard = ({ student, string_id }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { enqueueSnackbar } = useSnackbar();
+  
+
+  const onRemove = () => {
+    setDropdownOpen(false);
+    fetch('/admin/students/courses', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({ user_id: student.user_id, string_id: string_id }),
+    })
+    .then(res => res.json())
+    .then((data) => {
+      if (data.errorMessage) {
+        enqueueSnackbar(data.errorMessage, { variant: 'error' });
+      } else {
+        enqueueSnackbar(data.message, { variant: 'success' });
+        window.location.reload();
+      }
+    })
+    .catch((error) => {
+      enqueueSnackbar('An error occurred. Please try again later.', { variant: 'error' });
+    });
+  };
 
   const toggleDropdown = () => {
     setDropdownOpen(prevState => !prevState);
@@ -52,10 +79,10 @@ export const CompactStudentCard = ({ student, onRemove }) => {
 		      <VerticalDots className='w-6 h-6 text-gray-700' />
 		    </button>
 		    {dropdownOpen && (
-		      <div className='absolute right-0 top-10 w-30 bg-white border rounded shadow-md'>
+		      <div className='absolute right-3 top-5 w-30 bg-white border rounded shadow-md'>
 		        <button
 		          onClick={onRemove}
-		          className='block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200'
+		          className='block w-full text-left rounded px-5 py-2 text-red-500 hover:bg-gray-200'
 		        >
 		          Remove
 		        </button>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import ConfirmationModal from './ConfirmationModal'; 
+import { ConfirmationModal } from './ConfirmationModal'; 
 import CheckoutModal from './CheckoutModal';
 import trashcangif from '../../assets/icons8-trash.svg';
 
