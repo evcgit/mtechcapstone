@@ -85,11 +85,10 @@ app.post('/createAccount', async (req, res) => {
 
 app.get('/user/profile', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];
-
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
     const client = await pool.connect();
-    const result = await client.query('SELECT first_name, last_name, user_email, user_phone FROM users WHERE username = $1', [decoded.username]);
+    const result = await client.query('SELECT first_name, last_name, user_email, user_phone, user_admin FROM users WHERE username = $1', [decoded.username]);
     client.release();
 
     if (result.rows.length === 0) {
@@ -138,6 +137,25 @@ app.put('/admin/edit/user', async (req, res) => {
 	} catch (error) {
 		console.error('Error updating user:', error);
 		res.status(500).json({ errorMessage: 'Failed to update user' });
+	}
+});
+
+app.delete('/admin/delete/user', async (req, res) => {
+	const { user_id } = req.body;
+	const token = req.headers['authorization'].split(' ')[1];
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		await client.query('DELETE FROM users WHERE user_id = $1', [user_id]);
+		client.release();
+		res.status(200).json({ message: 'User deleted successfully' });
+		console.log(`${decoded.username} deleted user ${user_id}`);
+	} catch (error) {
+		console.error('Error deleting user:', error);
+		res.status(500).json({ errorMessage: 'Failed to delete user' });
 	}
 });
 

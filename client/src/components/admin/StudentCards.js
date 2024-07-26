@@ -82,7 +82,7 @@ export const CompactStudentCard = ({ student, string_id }) => {
 		      <div className='absolute right-3 top-5 w-30 bg-white border rounded shadow-md'>
 		        <button
 		          onClick={onRemove}
-		          className='block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-200'
+		          className='block w-full text-left rounded px-5 py-2 text-red-500 hover:bg-gray-200'
 		        >
 		          Remove
 		        </button>

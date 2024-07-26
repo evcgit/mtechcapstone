@@ -57,34 +57,34 @@ const Profile = () => {
     };
 
     useEffect(() => {
-        const fetchProfileInfo = async () => {
-            fetch('/user/profile', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.error) {
-                    console.log(data.error);
-                } else {
-                    setFirstName(data.first_name);
-                    setLastName(data.last_name);
-                    setEmail(data.user_email);
-                    setPhone(data.user_phone);
-										setIsAdmin(data.user_admin);
-                    setTimeout(() => {
-                      setLoading(false); 
-                    }, 700); 
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        };
-        fetchProfileInfo();
+      const fetchProfileInfo = async () => {
+        fetch('/user/profile', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+              console.log(data.error);
+          } else {
+              setFirstName(data.first_name);
+              setLastName(data.last_name);
+              setEmail(data.user_email);
+              setPhone(data.user_phone);
+							setIsAdmin(data.user_admin);
+              setTimeout(() => {
+                setLoading(false); 
+              }, 700); 
+          }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+      };
+      fetchProfileInfo();
     }, []);
 
     return (
