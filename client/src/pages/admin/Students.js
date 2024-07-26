@@ -9,7 +9,7 @@ import NewStudent from '../../components/admin/NewStudent';
 import { EditUser } from '../../components/admin/AdminModals';
 
 const Students = () => {
-	useAdminAuth();
+	// useAdminAuth();
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(true);
 	const [students, setStudents] = useState([]);
