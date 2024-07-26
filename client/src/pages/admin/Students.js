@@ -22,8 +22,8 @@ const Students = () => {
 			try {
 				const response = await fetch('/students', {
 					headers: {
+            method: 'GET',
 						'Content-Type': 'Application/json',
-						'authorization': `Bearer ${localStorage.getItem('token')}`
 					}
 				});
 				if (response.ok) {
