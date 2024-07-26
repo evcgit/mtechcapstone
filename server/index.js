@@ -369,7 +369,7 @@ app.post('/registered/students', async (req, res) => {
 });
 
 app.get('/students', async (req, res) => {
-		const token = req.headers['Authorization']?.split(' ')[1];
+		const token = req.headers['authorization']?.split(' ')[1];
 		if (!token) {
 			return res.status(403).json({ errorMessage: 'Unauthorized' });
 		}

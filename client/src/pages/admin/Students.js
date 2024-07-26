@@ -21,8 +21,8 @@ const Students = () => {
     const fetchStudents = async () => {
       fetch('/students', {
         headers: {
-          'Content-Type': 'Application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Content-Type': 'application/json',
+          'authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
       .then(response => response.json())
