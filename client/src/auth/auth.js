@@ -33,6 +33,7 @@ export const useAdminAuth = () => {
 	const navigate = useNavigate();
 	const { enqueueSnackbar } = useSnackbar();
 	const token = localStorage.getItem('token');
+	console.log('token:',token);
 	if (!token) {
 		navigate('/');
 	} else {

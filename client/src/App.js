@@ -11,16 +11,15 @@ import Students from './pages/admin/Students';
 const AppContent = () => {
 
   return (
-      <Routes>
-        <Route path="/" element={<Login />} />
+   <Routes>
+    <Route path="/" element={<Login />} />
 				<Route path="/createAccount" element={<CreateAccount />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/admin/home" element={<AdminHome />} />
+    <Route path="/home" element={<Home />} />
+    <Route path="/admin/home" element={<AdminHome />} />
 				<Route path="/register" element={<Register />} />
 				<Route path='/students' element={<Students />} />
-        <Route path="/profile" element={<Profile />} />
-        
-      </Routes>
+    <Route path="/profile" element={<Profile />} />     
+   </Routes>
   );
 };
 
