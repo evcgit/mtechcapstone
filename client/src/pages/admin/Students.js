@@ -17,32 +17,44 @@ const Students = () => {
 	const [openEdit, setOpenEdit] = useState(false);
 	const [selectedStudent, setSelectedStudent] = useState(null);
 
-  useEffect(() => {
-    const fetchStudents = async () => {
-					fetch('/students', {
-						headers: {
-								'Content-Type': 'application/json',
-								'authorization': `Bearer ${localStorage.getItem('token')}`
-						}
-					})
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          enqueueSnackbar(data.error, { variant: 'error' });
-          return;
+	useEffect(() => {
+  const fetchStudents = async () => {
+    const token = localStorage.getItem('token');
+    console.log('Token:', token); // Log the token
+
+    if (!token) {
+      enqueueSnackbar('No token found. Please log in again.', { variant: 'error' });
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch('/students', {
+        headers: {
+          'Content-Type': 'Application/json',
+          'Authorization': `Bearer ${token}`
         }
-        setTimeout(() => {
-          setStudents(data);
-          setLoading(false);
-        }, 700);
-      })
-      .catch(error => {
-        console.error('Error fetching students:', error);
-        enqueueSnackbar('Error fetching students', { variant: 'error' });
       });
-    };
-    fetchStudents();
-  }, [enqueueSnackbar]);
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setStudents(data);
+      } else {
+        enqueueSnackbar(data.errorMessage || 'Error fetching students', { variant: 'error' });
+      }
+
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      enqueueSnackbar('Error fetching students', { variant: 'error' });
+      setLoading(false);
+    }
+  };
+
+  fetchStudents();
+}, [enqueueSnackbar]);
+
 
 
 	const openEditModal = (student) => {
