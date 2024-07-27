@@ -47,6 +47,7 @@ const NewStudent = () => {
           setLastName('');
           setPhone('');
           setIsAdmin(false);
+					window.location.reload();
           enqueueSnackbar('Account created', { variant: 'success' });
         }
       })

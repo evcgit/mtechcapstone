@@ -69,7 +69,6 @@ const Students = () => {
         student.user_id === updatedStudent.user_id ? updatedStudent : student
       )
     );
-				window.location.reload();
   };
 
   const toggleCard = (user_id) => {
