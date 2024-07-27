@@ -3,10 +3,7 @@ import AdminHeader from '../../components/admin/AdminHeader';
 import { useAdminAuth } from '../../auth/auth';
 import backgroundImage from '../../assets/registerbg.webp';
 import { useSnackbar } from 'notistack';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import { StudentCard } from '../../components/admin/StudentCards';
-import NewStudent from '../../components/admin/NewStudent';
-import { EditUser } from '../../components/admin/AdminModals';
+
 
 const Students = () => {
 	useAdminAuth();
@@ -55,7 +52,7 @@ const Students = () => {
 
 
 	return (
-		<div style={{backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover', height: '100vh'}}>
+		<div style={{backgroundImage: `url(${backgroundImage})`}} className='bg-cover min-h-screen w-screen'>
 		<AdminHeader />
 	</div>
 	)
