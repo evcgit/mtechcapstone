@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AdminHeader from '../../components/admin/AdminHeader';
-import { useAdminAuth } from '../../auth/auth';
+// import { useAdminAuth } from '../../auth/auth';
 import backgroundImage from '../../assets/registerbg.webp';
 import { useSnackbar } from 'notistack';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -11,6 +11,7 @@ import { EditUser } from '../../components/admin/AdminModals';
 const Students = () => {
 	// useAdminAuth();
 	const token = localStorage.getItem('token');
+	alert(token);
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(true);
 	const [students, setStudents] = useState([]);
