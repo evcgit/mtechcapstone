@@ -6,7 +6,7 @@ import CreateAccount from './pages/user/CreateAccount';
 import Profile from './pages/user/Profile';
 import Register from './pages/user/Register';
 import AdminHome from './pages/admin/AdminHome';
-import Students from './pages/admin/StudentsPage';
+import Students from './pages/admin/Students';
 
 const AppContent = () => {
 
