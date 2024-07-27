@@ -10,6 +10,7 @@ import { EditUser } from '../../components/admin/AdminModals';
 
 const Students = () => {
 	// useAdminAuth();
+	const token = localStorage.getItem('token');
 	const { enqueueSnackbar } = useSnackbar();
 	const [loading, setLoading] = useState(true);
 	const [students, setStudents] = useState([]);
@@ -18,9 +19,9 @@ const Students = () => {
 	const [selectedStudent, setSelectedStudent] = useState(null);
 
 	useEffect(() => {
+		console.log('Token:', token); 
   const fetchStudents = async () => {
-    const token = localStorage.getItem('token');
-    console.log('Token:', token); // Log the token
+    
 
     if (!token) {
       enqueueSnackbar('No token found. Please log in again.', { variant: 'error' });
