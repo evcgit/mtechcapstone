@@ -180,6 +180,81 @@ app.delete('/admin/students/courses', async (req, res) => {
   }
 });
 
+app.post('/courses/register', async (req, res) => {
+  const { string_id } = req.body;
+  const token = req.headers['authorization']?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const userId = decoded.sub;
+
+    const client = await pool.connect();
+
+    try {
+      // Check if the course is already registered
+      const existingCourse = await client.query(
+        'SELECT * FROM register WHERE user_id = $1 AND string_id = $2',
+        [userId, string_id]
+      );
+
+      if (existingCourse.rows.length > 0) {
+        return res.status(400).json({ errorMessage: 'Course already registered' });
+      }
+
+      // Fetch the schedule of the new course
+      const newCourse = await client.query(
+        'SELECT schedule FROM courses WHERE string_id = $1',
+        [string_id]
+      );
+
+      if (newCourse.rows.length === 0) {
+        return res.status(404).json({ errorMessage: 'Course not found' });
+      }
+
+      const newCourseSchedule = newCourse.rows[0].schedule;
+
+      // Check for schedule conflicts
+      const conflictingCourses = await client.query(
+        'SELECT c.string_id, c.schedule FROM register r JOIN courses c ON r.string_id = c.string_id WHERE r.user_id = $1',
+        [userId]
+      );
+
+      for (const course of conflictingCourses.rows) {
+        if (course.schedule === newCourseSchedule) {
+          return res.status(400).json({ errorMessage: `Conflicts with already registered course ${course.string_id}` });
+        }
+      }
+
+      // Register the user for the new course
+      await client.query('BEGIN');
+      await client.query(
+        'INSERT INTO register (user_id, string_id) VALUES ($1, $2)',
+        [userId, string_id]
+      );
+      await client.query(
+        'UPDATE courses SET maximum_capacity = maximum_capacity - 1 WHERE string_id = $1 AND maximum_capacity > 0',
+        [string_id]
+      );
+      await client.query('COMMIT');
+
+      console.log(`${decoded.username} registered for course ${string_id}`);
+      res.status(200).json({ message: 'Course registered successfully' });
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+  } catch (error) {
+    console.error('Error registering course:', error);
+    res.status(500).json({ error: 'Failed to register course' });
+  }
+});
+
 
 app.get('/courses', async (req, res) => {
   const token = req.headers['authorization'].split(' ')[1];  

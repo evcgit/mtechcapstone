@@ -90,6 +90,7 @@ const ShoppingCart = ({ cartItems, setCartItems, handleConfirmPayment }) => {
                 cartItems={cartItems}
                 totalPrice={totalPrice}
                 handleConfirmPayment={handleConfirmPayment}
+                handleRemoveItem={handleRemoveItem}  // Pass the handler here
             />
         </div>
     );
