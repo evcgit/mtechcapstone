@@ -35,7 +35,7 @@ export const StudentCard = ({ student, toggleCard, isOpen, onEdit }) => {
 		);
 }
 
-export const CompactStudentCard = ({ student, string_id }) => {
+export const RemoveStudentCard = ({ student, string_id }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { enqueueSnackbar } = useSnackbar();
   
@@ -92,4 +92,53 @@ export const CompactStudentCard = ({ student, string_id }) => {
 		</div>
   );
 };
+
+
+export const AddStudentCard = ({ student, string_id, onStudentAdded }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleAddStudent = async () => {
+    try {
+      const response = await fetch('/admin/register/student', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ string_id, user_id: student.user_id })
+      });
+
+      if (response.ok) {
+        enqueueSnackbar('Student added to the course', { variant: 'success' });
+        onStudentAdded(student.user_id); // Call the callback to update the parent component
+      } else {
+        const data = await response.json();
+        enqueueSnackbar(data.errorMessage, { variant: 'error' });
+      }
+    } catch (error) {
+      console.error('Error adding student to the course:', error);
+      enqueueSnackbar('Failed to add student', { variant: 'error' });
+    }
+  };
+
+  return (
+    <div className='bg-slate-100 rounded-lg p-4 w-full max-w-md shadow-lg flex justify-between items-center'>
+      <div className='text-left'>
+        <h2 className='text-lg font-semibold'>{student.first_name} {student.last_name}</h2>
+        <p className='text-xs text-gray-500'>ID: {student.user_id}</p>
+      </div>
+      <div className='relative flex items-center'>
+        <div className='w-30 bg-white border rounded shadow-md'>
+          <button 
+            onClick={handleAddStudent} // Pass the function reference, not the invocation
+            className=' w-full text-left rounded px-5 py-2 text-blue-500 hover:bg-gray-200'
+          >
+            Add
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
