@@ -60,7 +60,7 @@ const Register = () => {
 
     const fetchRegisteredCourses = async () => {
         try {
-            const response = await fetch('/courses/registered', {
+            const response = await fetch('/student/registered', {
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('token')}`
