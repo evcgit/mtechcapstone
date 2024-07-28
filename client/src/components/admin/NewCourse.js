@@ -15,6 +15,8 @@ const NewCourse = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+		const parsedCost = parseFloat(cost);
+
     const courseData = {
       title,
       stringId,
@@ -23,10 +25,10 @@ const NewCourse = () => {
       classroomNumber,
       maxCapacity,
       credits,
-      cost,
+      cost: parsedCost,
     };
 
-    fetch('/courses', {
+    fetch('/admin/courses', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

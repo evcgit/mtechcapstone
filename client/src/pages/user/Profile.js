@@ -39,7 +39,7 @@ const Profile = () => {
             phone: updatedPhone
         };
 
-        fetch('/user/profile', {
+        fetch('/auth/user/profile', {
           method: 'PUT',
           headers: {
               'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const Profile = () => {
 
     useEffect(() => {
       const fetchProfileInfo = async () => {
-        fetch('/user/profile', {
+        fetch('/auth/user/profile', {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',

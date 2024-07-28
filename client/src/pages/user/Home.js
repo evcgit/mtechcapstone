@@ -20,7 +20,7 @@ const Home = () => {
   useEffect(() => {
     const fetchProfileInfo = async () => {
       try {
-        const profileRes = await fetch('/user/profile', {
+        const profileRes = await fetch('/auth/user/profile', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ const Home = () => {
 
     const fetchRegisteredCourses = async () => {
       try {
-        const coursesRes = await fetch('/courses/schedule', {
+        const coursesRes = await fetch('/student/courses/schedule', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ const Home = () => {
 
   const handleRemoveCourse = async (courseId) => {
     try {
-      const response = await fetch(`/courses/remove/${courseId}`, {
+      const response = await fetch(`/student/remove/${courseId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
