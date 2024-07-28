@@ -13,11 +13,11 @@ const AppContent = () => {
   return (
    <Routes>
     <Route path="/" element={<Login />} />
-				<Route path="/createAccount" element={<CreateAccount />} />
+		<Route path="/createAccount" element={<CreateAccount />} />
     <Route path="/home" element={<Home />} />
     <Route path="/admin/home" element={<AdminHome />} />
-				<Route path="/register" element={<Register />} />
-				<Route path='/admin/students' element={<Students />} />
+		<Route path="/register" element={<Register />} />
+		<Route path='/students' element={<Students />} />
     <Route path="/profile" element={<Profile />} />     
    </Routes>
   );

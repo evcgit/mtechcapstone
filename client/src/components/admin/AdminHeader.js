@@ -23,7 +23,7 @@ const Header = () => {
           BBU
         </div>
         <div className="hidden md:flex flex-1 justify-center space-x-12">
-          <a href="/admin/students" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
+          <a href="/students" className="relative text-lg text-gray-300 hover:text-white transition duration-300 ease-in-out group">
             Students
             <span className="absolute left-1/2 bottom-0 w-0 h-0.5 bg-white transition-all duration-300 ease-in-out group-hover:w-full group-hover:left-0"></span>
           </a>
