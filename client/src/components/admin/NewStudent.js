@@ -26,7 +26,7 @@ const NewStudent = () => {
       phone: phone
     };
 
-    fetch('/createAccount', {
+    fetch('/auth/createAccount', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

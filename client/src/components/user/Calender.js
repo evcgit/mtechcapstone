@@ -46,7 +46,7 @@ const Calendar = () => {
     };
 
     useEffect(() => {
-        fetch('/courses/schedule', {
+        fetch('/student/courses/schedule', {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

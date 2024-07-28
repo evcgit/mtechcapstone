@@ -27,7 +27,7 @@ const Students = () => {
       }
 
       try {
-        const response = await fetch('/students', {
+        const response = await fetch('/admin/students', {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`

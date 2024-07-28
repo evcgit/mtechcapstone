@@ -14,7 +14,7 @@ const AdminHome = () => {
 
     const fetchCourses = async () => {
       try {
-          const response = await fetch('/courses', {
+          const response = await fetch('/admin/courses', {
               headers: {
                   'Content-Type': 'application/json',
                   'authorization': `Bearer ${localStorage.getItem('token')}`

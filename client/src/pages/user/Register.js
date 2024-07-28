@@ -15,7 +15,7 @@ const Register = () => {
 
     const fetchCourses = async () => {
         try {
-            const response = await fetch('/courses', {
+            const response = await fetch('/student/courses', {
                 headers: {
                     'Content-Type': 'application/json',
                     'authorization': `Bearer ${localStorage.getItem('token')}`
@@ -58,7 +58,7 @@ const Register = () => {
     const handleConfirmPayment = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('/courses/registered', {
+            const response = await fetch('/student/registered', {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
