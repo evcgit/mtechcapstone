@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Header from '../../components/user/Header';
 import RegisterCard from '../../components/user/RegisterCard';
-import ShoppingCart from '../../components/user/ShoppingCard'; // Ensure this is the correct path
+import ShoppingCart from '../../components/user/ShoppingCard';
 import backgroundImage from '../../assets/registerbg.webp';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import { useSnackbar } from 'notistack';
 
-// Helper function to parse schedule into a more manageable format
 const parseSchedule = (schedule) => {
     return schedule.split(',').map(slot => {
         const [days, time] = slot.trim().split(' ');
@@ -14,7 +13,6 @@ const parseSchedule = (schedule) => {
     });
 };
 
-// Function to check for conflicts
 const hasScheduleConflict = (newCourseSchedule, cartItems, registeredCourses) => {
     const newCourseTimes = parseSchedule(newCourseSchedule);
 
@@ -25,12 +23,12 @@ const hasScheduleConflict = (newCourseSchedule, cartItems, registeredCourses) =>
         for (const newTime of newCourseTimes) {
             for (const itemTime of itemTimes) {
                 if (newTime.days === itemTime.days && newTime.time === itemTime.time) {
-                    return true; // Conflict found
+                    return true;
                 }
             }
         }
     }
-    return false; // No conflicts
+    return false;
 };
 
 const Register = () => {
@@ -41,7 +39,6 @@ const Register = () => {
     const [loading, setLoading] = useState(true);
     const { enqueueSnackbar } = useSnackbar();
 
-    // Fetch courses
     const fetchCourses = async () => {
         try {
             const response = await fetch('/courses', {
@@ -61,7 +58,6 @@ const Register = () => {
         }
     };
 
-    // Fetch registered courses
     const fetchRegisteredCourses = async () => {
         try {
             const response = await fetch('/courses/registered', {
@@ -72,7 +68,6 @@ const Register = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                console.log('Registered Courses:', data); // Debugging line
                 setRegisteredCourses(data);
             } else {
                 console.error('Failed to fetch registered courses');
@@ -82,7 +77,6 @@ const Register = () => {
         }
     };
 
-    // Fetch data on component mount
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -95,7 +89,6 @@ const Register = () => {
         fetchData();
     }, []);
 
-    // Toggle RegisterCard
     const toggleCard = (stringId) => {
         setOpenCards(prev => 
             prev.includes(stringId) 
@@ -104,7 +97,6 @@ const Register = () => {
         );
     };
 
-    // Add course to cart with conflict checking
     const addToCart = (course) => {
         if (cartItems.some(item => item.string_id === course.string_id)) {
             enqueueSnackbar('Course is already selected', { variant: 'error' });
@@ -116,7 +108,6 @@ const Register = () => {
       }
     };
 
-    // Handle payment confirmation
     const handleConfirmPayment = async (e) => {
         e.preventDefault();
         try {
@@ -134,8 +125,8 @@ const Register = () => {
                 enqueueSnackbar(data.errorMessage, { variant: 'error' });
             } else {
                 setCartItems([]);
-                await fetchCourses(); // Optionally update the courses list
-                await fetchRegisteredCourses(); // Optionally update registered courses list
+                await fetchCourses();
+                await fetchRegisteredCourses();
                 enqueueSnackbar('Registration successful', { variant: 'success' });
             }
         } catch (error) {
