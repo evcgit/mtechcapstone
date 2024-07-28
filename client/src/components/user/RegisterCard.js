@@ -4,6 +4,7 @@ import { ReactComponent as DownArrow } from '../../assets/chevron-down-solid.svg
 
 const RegisterCard = ({ isOpen, toggleCard, addToCart, course }) => {
     const isFull = course.maximum_capacity === 0;
+    const isLowSpots = course.maximum_capacity > 0 && course.maximum_capacity < 5;
 
     return (
         <div className='bg-slate-100 rounded p-4 relative'>
@@ -17,7 +18,12 @@ const RegisterCard = ({ isOpen, toggleCard, addToCart, course }) => {
                             Spots Unavailable
                         </span>
                     )}
-                    {!isFull && (
+                    {!isFull && isLowSpots && (
+                        <span className='ml-2 bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full'>
+                            Few Spots Left
+                        </span>
+                    )}
+                    {!isFull && !isLowSpots && (
                         <span className='ml-2 bg-green-500 text-white text-xs font-semibold px-2 py-1 rounded-full'>
                             Spots Available
                         </span>

@@ -1,13 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import { useSnackbar } from 'notistack';
+import trashcangif from '../../assets/icons8-trash.svg';
 
-const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleConfirmPayment }) => {
+const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleConfirmPayment, handleRemoveItem }) => {
     const [isPaymentView, setIsPaymentView] = useState(false);
     const [discountCode, setDiscountCode] = useState('');
     const [discountApplied, setDiscountApplied] = useState(false);
     const [discountedPrice, setDiscountedPrice] = useState(totalPrice);
     const [showCourses, setShowCourses] = useState(false);
+
+    // Credit card information state
+    const [name, setName] = useState('');
+    const [cardNumber, setCardNumber] = useState('');
+    const [expiryDate, setExpiryDate] = useState('');
+    const [cvv, setCvv] = useState('');
+
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
@@ -34,11 +42,19 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
     const handleConfirmPaymentClose = (e) => {
         e.preventDefault();
         if (discountedPrice === 0) {
+            // Skip credit card validation if price is 0
             handleConfirmPayment(e);
             onRequestClose();
             setIsPaymentView(false);
         } else {
-            enqueueSnackbar('Total amount due must be $0 to confirm payment', { variant: 'error' });
+            if (!name || !cardNumber || !expiryDate || !cvv) {
+                enqueueSnackbar('Please fill out all credit card fields', { variant: 'error' });
+                return;
+            }
+            console.log('Payment details:', { name, cardNumber, expiryDate, cvv }); // Debugging line
+            handleConfirmPayment(e);
+            onRequestClose();
+            setIsPaymentView(false);
         }
     };
 
@@ -57,15 +73,18 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                             <div className="flex flex-col h-full">
                                 <h2 className="text-2xl font-semibold mb-4 text-gray-800">Payment</h2>
                                 <div className="flex-grow flex flex-col">
-                                    <form className="flex-grow overflow-y-auto">
+                                    <form className="flex-grow overflow-y-auto" onSubmit={handleConfirmPaymentClose}>
+                                        {/* Payment Details */}
                                         <div className="mb-4">
                                             <label className="block text-gray-700 mb-1" htmlFor="name">Name</label>
                                             <input
                                                 type="text"
                                                 id="name"
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
                                                 className="w-full px-3 py-1 border border-gray-300 rounded-lg"
                                                 placeholder="Enter your name"
-                                                required
+                                                required={discountedPrice > 0}
                                             />
                                         </div>
                                         <div className="mb-4">
@@ -73,9 +92,11 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                             <input
                                                 type="text"
                                                 id="cardNumber"
+                                                value={cardNumber}
+                                                onChange={(e) => setCardNumber(e.target.value)}
                                                 className="w-full px-3 py-1 border border-gray-300 rounded-lg"
                                                 placeholder="Enter your card number"
-                                                required
+                                                required={discountedPrice > 0}
                                             />
                                         </div>
                                         <div className="mb-4">
@@ -83,9 +104,11 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                             <input
                                                 type="text"
                                                 id="expiryDate"
+                                                value={expiryDate}
+                                                onChange={(e) => setExpiryDate(e.target.value)}
                                                 className="w-full px-3 py-1 border border-gray-300 rounded-lg"
                                                 placeholder="MM/YY"
-                                                required
+                                                required={discountedPrice > 0}
                                             />
                                         </div>
                                         <div className="mb-4">
@@ -93,9 +116,11 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                             <input
                                                 type="text"
                                                 id="cvv"
+                                                value={cvv}
+                                                onChange={(e) => setCvv(e.target.value)}
                                                 className="w-full px-3 py-1 border border-gray-300 rounded-lg"
                                                 placeholder="Enter CVV"
-                                                required
+                                                required={discountedPrice > 0}
                                             />
                                         </div>
                                         <div className="mb-4">
@@ -134,9 +159,17 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                                 <div className="mt-4 bg-white border border-gray-200 rounded-lg shadow-md overflow-y-auto max-h-60 custom-scrollbar">
                                                     <ul className="divide-y divide-gray-200">
                                                         {cartItems.map(item => (
-                                                            <li key={item.string_id} className="px-4 py-3 flex justify-between items-center">
+                                                            <li key={item.string_id} className="px-4 py-3 flex items-center justify-between">
                                                                 <span className="text-gray-800">{item.title}</span>
-                                                                <span className="text-gray-600">{item.cost}</span>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <span className="text-gray-600">{item.cost}</span>
+                                                                    <img 
+                                                                        onClick={() => handleRemoveItem(item.string_id, item.title)} 
+                                                                        src={trashcangif} 
+                                                                        alt="Remove" 
+                                                                        className='w-4 h-4 cursor-pointer'
+                                                                    />
+                                                                </div>
                                                             </li>
                                                         ))}
                                                     </ul>
@@ -147,7 +180,7 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                         <div className="flex justify-between items-center mb-4">
                                             <span className="text-lg font-medium">Total Amount Due:</span>
                                             <span className="text-lg font-medium">
-                                                ${discountApplied ? discountedPrice.toFixed(2) : totalPrice.toFixed(2)}
+                                                ${discountedPrice.toFixed(2)}
                                             </span>
                                         </div>
 
@@ -160,10 +193,9 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                                 Back
                                             </button>
                                             <button
-                                                onClick={handleConfirmPaymentClose}
                                                 type="submit"
-                                                className={`bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600 ${discountedPrice !== 0 ? 'cursor-not-allowed opacity-50' : ''}`}
-                                                disabled={discountedPrice !== 0}
+                                                className={`bg-blue-500 text-white px-4 py-2 rounded-lg transition hover:bg-blue-600 ${(!name || !cardNumber || !expiryDate || !cvv) && discountedPrice > 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                                disabled={(!name || !cardNumber || !expiryDate || !cvv) && discountedPrice > 0}
                                             >
                                                 Confirm Payment
                                             </button>
@@ -182,15 +214,24 @@ const CheckoutModal = ({ isOpen, onRequestClose, cartItems, totalPrice, handleCo
                                                 {cartItems.map(item => (
                                                     <li key={item.string_id} className="px-4 py-3 flex justify-between items-center">
                                                         <span className="text-gray-800">{item.title}</span>
-                                                        <span className="text-gray-600">{item.cost}</span>
+                                                        <div className="flex items-center space-x-2">
+                                                            <span className="text-gray-600">{item.cost}</span>
+                                                            <img 
+                                                                onClick={() => handleRemoveItem(item.string_id, item.title)} 
+                                                                src={trashcangif} 
+                                                                alt="Remove" 
+                                                                className='w-4 h-4 cursor-pointer'
+                                                            />
+                                                        </div>
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
                                     </div>
-
-                                    <h3 className="text-lg font-medium mb-4 text-gray-700">Total Price: ${discountApplied ? discountedPrice.toFixed(2) : totalPrice.toFixed(2)}</h3>
-
+                                    <div className="mb-4 flex justify-between items-center">
+                                        <span className="text-lg font-medium">Total Amount:</span>
+                                        <span className="text-lg font-medium">${totalPrice.toFixed(2)}</span>
+                                    </div>
                                     <div className="flex justify-end space-x-4">
                                         <button
                                             onClick={onRequestClose}

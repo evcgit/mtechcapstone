@@ -15,6 +15,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [registeredCourses, setRegisteredCourses] = useState([]);
   const [dropdownOpen, setDropdownOpen] = useState(null);
+  const [conflictError, setConflictError] = useState('');
 
   useEffect(() => {
     const fetchProfileInfo = async () => {
@@ -82,6 +83,10 @@ const Home = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
+        if (errorData.errorMessage) {
+          setConflictError(errorData.errorMessage); // Set the conflict error
+          return; // Stop further processing if there is a conflict error
+        }
         throw new Error(errorData.error || 'Error removing course');
       }
 
@@ -92,6 +97,7 @@ const Home = () => {
         prevCourses.filter(course => course.string_id !== courseId)
       );
       setDropdownOpen(null);
+      setConflictError(''); // Clear any conflict error if removal is successful
     } catch (error) {
       console.error('Error removing course:', error);
       enqueueSnackbar(`Error removing course: ${error.message}`, { variant: 'error' });
@@ -134,6 +140,9 @@ const Home = () => {
               {/* Registered Courses */}
               <div className='p-6 bg-white/80 backdrop-blur-md rounded-3xl shadow-lg flex flex-col max-h-[400px]'>
                 <h3 className='text-xl font-semibold mb-4 text-gray-700'>Registered Courses</h3>
+                {conflictError && (
+                  <p className='text-red-600 mb-4'>{conflictError}</p> // Display conflict error
+                )}
                 <ul className='relative overflow-y-auto custom-scrollbar space-y-2'>
                   {registeredCourses.length > 0 ? (
                     registeredCourses.map(course => (
