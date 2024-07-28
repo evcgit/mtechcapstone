@@ -187,4 +187,46 @@ router.get('/students', async (req, res) => {
 	}
 });
 
+router.post('/register/student', async (req, res) => {
+	const { user_id, string_id } = req.body;
+	const token = req.headers['authorization'].split(' ')[1];
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		await client.query('BEGIN');
+		await client.query('INSERT INTO register (user_id, string_id) VALUES ($1, $2)', [user_id, string_id]);
+		await client.query('UPDATE courses SET maximum_capacity = maximum_capacity - 1 WHERE string_id = $1', [string_id]);
+		await client.query('COMMIT');
+		client.release();
+		res.status(201).json({ message: 'Student registered successfully' });
+	} catch (error) {
+		console.error('Error registering student:', error);
+		res.status(500).json({ errorMessage: 'Failed to register student' });
+	}
+});
+
+router.post('/unregistered/students', async (req, res) => {
+	const token = req.headers['authorization'].split(' ')[1];
+	const { string_id } = req.body;
+	try {
+		const decoded = jwt.verify(token, JWT_SECRET);
+		if (!decoded.isAdmin) {
+			return res.status(403).json({ errorMessage: 'Unauthorized' });
+		}
+		const client = await pool.connect();
+		const result = await client.query(
+			'SELECT * FROM users WHERE user_admin = false AND user_id NOT IN (SELECT user_id FROM register WHERE string_id = $1)',
+			[string_id]
+		);
+		client.release();
+		res.status(200).json(result.rows);
+	} catch (error) {
+		console.error('Error fetching unregistered students:', error);
+		res.status(500).json({ errorMessage: 'Failed to fetch unregistered students' });
+	}
+});
+
 module.exports = router;
